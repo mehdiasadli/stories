@@ -1,0 +1,239 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ContentStatus {
+  DRAFT
+  ARCHIVED
+  PUBLISHED
+}
+
+enum CharacterAppearanceType {
+  POV
+  APPEARANCE
+  MENTION
+}
+
+enum CharacterGender {
+  MALE
+  FEMALE
+  NOT_SPECIFIED
+  OTHER
+}
+
+enum CharacterRelationType {
+  PARENT
+  SIBLING
+  SPOUSE
+  CHILD
+  LOVER
+}
+
+model User {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  email      String  @unique
+  slug       String  @unique
+  name       String
+  password   String
+  admin      Boolean @default(false) // Admin can write,edit and delete chapters and characters
+  isVerified Boolean @default(false)
+
+  verificationTokens EmailVerificationToken[]
+  favoriteChapters   FavoriteChapter[]
+  reads              ChapterRead[]
+  comments           Comment[]
+  chapters           Chapter[]
+  characterViews     CharacterView[]
+  favoriteCharacters FavoriteCharacter[]
+
+  @@map("users")
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  @@map("email_verification_tokens")
+}
+
+model Chapter {
+  id              String        @id @default(uuid())
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  publishedAt     DateTime?
+  slug            String        @unique
+  order           Int           @unique
+  title           String
+  synopsis        String?
+  status          ContentStatus @default(DRAFT)
+  content         String        @default("") @db.Text
+  previousContent String        @default("") @db.Text
+  coverImageUrl   String?
+  wordCount       Int           @default(0)
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  favorites  FavoriteChapter[]
+  characters ChapterCharacter[]
+  reads      ChapterRead[]
+  comments   Comment[]
+
+  @@index([slug])
+  @@index([title])
+  @@index([order])
+  @@index([status])
+  @@index([authorId])
+  @@map("chapters")
+}
+
+model FavoriteChapter {
+  chapterId String
+  userId    String
+
+  chapter Chapter @relation(fields: [chapterId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@id([chapterId, userId])
+  @@map("favorite_chapters")
+}
+
+model ChapterRead {
+  chapterId String
+  userId    String
+
+  chapter Chapter @relation(fields: [chapterId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@id([chapterId, userId])
+  @@map("chapter_reads")
+}
+
+model Character {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  slug             String          @unique
+  published        Boolean         @default(false)
+  name             String
+  nameDescription  String?
+  description      String?
+  titles           String[]
+  aliases          String[]
+  wiki             String?         @db.Text
+  profileImageUrl  String?
+  dateOfBirth      String?
+  dateOfDeath      String?
+  placeOfBirth     String?
+  placeOfDeath     String?
+  birthDescription String?
+  deathDescription String?
+  gender           CharacterGender @default(NOT_SPECIFIED)
+
+  chapters         ChapterCharacter[]
+  relations        CharacterRelation[] @relation("MainCharacterOnRelation")
+  relatedRelations CharacterRelation[] @relation("RelatedCharacterOnRelation")
+  views            CharacterView[]
+  favorites        FavoriteCharacter[]
+
+  @@index([slug])
+  @@index([name])
+  @@map("characters")
+}
+
+model CharacterView {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  characterId String
+  character   Character @relation(fields: [characterId], references: [id])
+
+  userId String? // non authenticated users also count
+  user   User?   @relation(fields: [userId], references: [id])
+
+  @@map("character_views")
+}
+
+model FavoriteCharacter {
+  characterId String
+  userId      String
+
+  character Character @relation(fields: [characterId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@id([characterId, userId])
+  @@map("favorite_characters")
+}
+
+model CharacterRelation {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type               CharacterRelationType
+  description        String?
+  characterId        String
+  relatedCharacterId String
+  character          Character             @relation("MainCharacterOnRelation", fields: [characterId], references: [id])
+  relatedCharacter   Character             @relation("RelatedCharacterOnRelation", fields: [relatedCharacterId], references: [id])
+
+  @@map("character_relations")
+}
+
+model ChapterCharacter {
+  id          String @id @default(uuid())
+  chapterId   String
+  characterId String
+
+  chapter   Chapter   @relation(fields: [chapterId], references: [id])
+  character Character @relation(fields: [characterId], references: [id])
+
+  appearanceType    CharacterAppearanceType
+  note              String?                 @db.Text
+  quotesAndThoughts String[]
+
+  @@unique([characterId, chapterId])
+  @@map("chapter_characters")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  slug      String   @unique
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  depth Int @default(1)
+
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapterId String
+  chapter   Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  parentId  String?
+  parent    Comment?  @relation("Thread", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("Thread")
+
+  @@index([userId])
+  @@index([chapterId])
+  @@map("comments")
+}

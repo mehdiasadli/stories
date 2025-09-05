@@ -6,10 +6,9 @@ import { toast } from 'sonner';
 interface ChapterShareOptionsProps {
   chapterTitle: string;
   chapterUrl: string;
-  authorName: string;
 }
 
-export function ChapterShareOptions({ chapterTitle, chapterUrl, authorName }: ChapterShareOptionsProps) {
+export function ChapterShareOptions({ chapterTitle, chapterUrl }: ChapterShareOptionsProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const shareOptions = [

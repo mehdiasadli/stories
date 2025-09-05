@@ -1,14 +1,9 @@
 import { CharacterCard } from '@/components/character-card';
 import { WikiSearchBar } from '@/components/wiki-searchbar';
 import { getWikiCharacters } from '@/lib/fetchers';
-import { TCharacterSearch } from '@/lib/schemas/character.schema';
 import { Suspense } from 'react';
 
-interface CharactersPageProps {
-  searchParams: Promise<Partial<TCharacterSearch>>;
-}
-
-export default async function CharactersPage({ searchParams }: CharactersPageProps) {
+export default async function CharactersPage() {
   const wikiCharacters = await getWikiCharacters();
 
   return (

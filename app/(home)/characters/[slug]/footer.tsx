@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { CharacterShareOptions } from './share-options';
 import { Chapter, Character, CharacterAppearanceType } from '@prisma/client';
 import { CharacterActions } from './character-actions';

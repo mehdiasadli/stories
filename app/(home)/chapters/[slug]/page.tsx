@@ -141,7 +141,6 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
               <ChapterShareOptions
                 chapterTitle={chapter.title}
                 chapterUrl={`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/chapters/${slug}`}
-                authorName={chapter.author.name}
               />
             )}
           </div>

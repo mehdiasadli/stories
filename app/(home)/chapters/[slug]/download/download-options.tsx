@@ -291,7 +291,7 @@ export function ChapterDownloadOptions({ chapter }: ChapterDownloadOptionsProps)
           <div className='flex items-center justify-between mb-4'>
             <div>
               <h3 className='text-lg font-serif text-gray-900 mb-1'>PDF sənədi</h3>
-              <p className='text-sm text-gray-600'>Formatlanmış PDF sənədi, stil və "layout" qorunur</p>
+              <p className='text-sm text-gray-600'>Formatlanmış PDF sənədi, stil və &quot;layout&quot; qorunur</p>
             </div>
           </div>
 

@@ -6,7 +6,15 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lint:fix": "next lint --fix",
+    "type-check": "tsc --noEmit",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "vercel-build": "prisma generate && prisma migrate deploy && next build",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@faker-js/faker": "^10.0.0",

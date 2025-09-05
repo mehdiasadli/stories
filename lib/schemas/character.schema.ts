@@ -1,5 +1,5 @@
 import z from 'zod';
-import { DATE_REGEX, PLACE_REGEX, SLUG_REGEX } from '../regexes';
+import { SLUG_REGEX } from '../regexes';
 import { CharacterGenderSchema } from './enums.schema';
 
 export const CharacterSchema = z.object({

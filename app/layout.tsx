@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
 import { az } from 'date-fns/locale';
+import { Analytics } from '@vercel/analytics/react';
 import { setDefaultOptions } from 'date-fns';
 
 setDefaultOptions({ locale: az });
@@ -94,6 +95,7 @@ export default function RootLayout({
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionProvider>{children}</SessionProvider>
+        <Analytics />
       </body>
     </html>
   );

@@ -169,6 +169,9 @@ model CharacterView {
   userId String? // non authenticated users also count
   user   User?   @relation(fields: [userId], references: [id])
 
+  fingerprint String?
+
+  @@index([characterId, fingerprint, createdAt])
   @@map("character_views")
 }
 

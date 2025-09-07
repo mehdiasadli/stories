@@ -12,7 +12,7 @@ interface OpengraphImageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function OpengraphImage({ params }: OpengraphImageProps) {
+export default async function OpengraphImage({ params }: OpengraphImageProps) {
   const { slug } = await params;
   const character = await getCharacter(slug);
 

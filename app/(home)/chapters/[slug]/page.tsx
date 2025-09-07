@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: ChapterPageProps): Promise<Me
       title: openGraphTitle,
       description: synopsis,
       card: 'summary_large_image',
-      images: [`${baseUrl}/chapters/${slug}/opengraph-image`],
+      images: [`${baseUrl}/api/og/chapters/${slug}`],
     },
     pinterest: {
       richPin: true,
@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: ChapterPageProps): Promise<Me
       url: `${baseUrl}/chapters/${slug}`,
       images: [
         {
-          url: `${baseUrl}/chapters/${slug}/opengraph-image`,
+          url: `${baseUrl}/api/og/chapters/${slug}`,
           width: 1200,
           height: 630,
           alt: openGraphTitle,

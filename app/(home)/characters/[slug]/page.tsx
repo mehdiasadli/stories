@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: CharacterPageProps): Promise<
       title: openGraphTitle,
       description,
       card: 'summary_large_image',
-      images: [`${baseUrl}/characters/${slug}/opengraph-image`],
+      images: [`${baseUrl}/api/og/characters/${slug}`],
     },
     openGraph: {
       title: openGraphTitle,
@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: CharacterPageProps): Promise<
       type: 'profile',
       images: [
         {
-          url: `${baseUrl}/characters/${slug}/opengraph-image`,
+          url: `${baseUrl}/api/og/characters/${slug}`,
           width: 1200,
           height: 630,
           alt: openGraphTitle,

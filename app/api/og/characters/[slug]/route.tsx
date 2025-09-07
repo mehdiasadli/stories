@@ -1,23 +1,11 @@
-// /(home)/characters/[slug]/opengraph-image.tsx
 import { getCharacter } from '@/lib/fetchers';
 import { ImageResponse } from 'next/og';
 
-export const alt = 'Chapter OpenGraph Image';
-export const size = {
-  width: 1200,
-  height: 630,
-} as const;
+export const runtime = 'edge';
 
-const SHOW_ALIASES_COUNT = 6;
-
-interface OpengraphImageProps {
-  params: Promise<{ slug: string }>;
-}
-
-export default async function OpengraphImage({ params }: OpengraphImageProps) {
+export async function GET(request: Request, { params }: { params: { slug: string } }) {
   try {
-    const { slug } = await params;
-    const character = await getCharacter(slug);
+    const character = await getCharacter(params.slug);
 
     if (!character) {
       return new ImageResponse(
@@ -37,9 +25,10 @@ export default async function OpengraphImage({ params }: OpengraphImageProps) {
           </div>
         ),
         {
-          ...size,
+          width: 1200,
+          height: 630,
           headers: {
-            'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+            'Cache-Control': 'public, max-age=31536000, immutable',
           },
         }
       );
@@ -58,10 +47,10 @@ export default async function OpengraphImage({ params }: OpengraphImageProps) {
             fontFamily: 'Times New Roman, Times, serif',
           }}
         >
-          {/* Book header spacing */}
+          {/* Header spacing */}
           <div style={{ padding: '40px 48px 0 48px' }} />
 
-          {/* Content: two-column with portrait left */}
+          {/* Content: two-column */}
           <div
             style={{
               padding: '0 64px 96px 64px',
@@ -140,13 +129,9 @@ export default async function OpengraphImage({ params }: OpengraphImageProps) {
                   lineHeight: 1.05,
                   fontWeight: 600,
                   letterSpacing: '-0.02em',
-                  overflow: 'hidden',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 3,
-                  WebkitBoxOrient: 'vertical',
                 }}
               >
-                {character.name || 'personaj tapılmadı'}
+                {character.name}
               </div>
               {character.description && (
                 <div
@@ -155,61 +140,15 @@ export default async function OpengraphImage({ params }: OpengraphImageProps) {
                     color: '#4a463f',
                     fontSize: '20px',
                     lineHeight: 1.3,
-                    overflow: 'hidden',
-                    display: '-webkit-box',
-                    WebkitLineClamp: 4,
-                    WebkitBoxOrient: 'vertical',
                   }}
                 >
                   {character.description}
                 </div>
               )}
-              {character.aliases && character.aliases.length > 0 && (
-                <div
-                  style={{
-                    marginTop: '24px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    flexWrap: 'wrap',
-                    maxWidth: '700px',
-                  }}
-                >
-                  {character.aliases.slice(0, SHOW_ALIASES_COUNT).map((alias, index) => (
-                    <span
-                      key={`${alias}-${index}`}
-                      style={{
-                        padding: '2px 10px',
-                        borderRadius: '20px',
-                        border: '1px solid #d8d3c4',
-                        backgroundColor: '#fbfaf7',
-                        color: '#2f2b24',
-                        fontSize: '12px',
-                      }}
-                    >
-                      {alias}
-                    </span>
-                  ))}
-                  {character.aliases.length > SHOW_ALIASES_COUNT && (
-                    <span
-                      style={{
-                        padding: '2px 10px',
-                        borderRadius: '20px',
-                        border: '1px solid #d8d3c4',
-                        backgroundColor: '#fbfaf7',
-                        color: '#2f2b24',
-                        fontSize: '12px',
-                      }}
-                    >
-                      +{character.aliases.length - SHOW_ALIASES_COUNT}
-                    </span>
-                  )}
-                </div>
-              )}
             </div>
           </div>
 
-          {/* Bookish footer with stats and birth info */}
+          {/* Footer */}
           <div
             style={{
               position: 'absolute',
@@ -230,23 +169,14 @@ export default async function OpengraphImage({ params }: OpengraphImageProps) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  gap: '24px',
                   color: '#4a463f',
+                  fontSize: '13px',
                 }}
               >
-                {/* Left: stats */}
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '20px',
-                    fontSize: '13px',
-                    letterSpacing: '0.02em',
-                  }}
-                >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                   <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
                     <span style={{ fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
-                      {character._count?.chapters || character.chapters?.length || 0}
+                      {character._count?.chapters || 0}
                     </span>
                     <span>iştirak</span>
                   </span>
@@ -257,24 +187,6 @@ export default async function OpengraphImage({ params }: OpengraphImageProps) {
                     </span>
                     <span>baxış</span>
                   </span>
-                  <span style={{ color: '#d0cabc' }}>•</span>
-                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
-                      {character._count?.favorites || 0}
-                    </span>
-                    <span>favorit</span>
-                  </span>
-                </div>
-
-                {/* Right: birth info */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '13px', color: '#6b6558' }}>
-                  {character.dateOfBirth && <span style={{ color: '#2f2b24' }}>{character.dateOfBirth}</span>}
-                  {character.placeOfBirth && (
-                    <>
-                      <span style={{ color: '#d0cabc' }}>•</span>
-                      <span style={{ color: '#2f2b24' }}>{character.placeOfBirth}</span>
-                    </>
-                  )}
                 </div>
               </div>
             </div>
@@ -282,16 +194,14 @@ export default async function OpengraphImage({ params }: OpengraphImageProps) {
         </div>
       ),
       {
-        ...size,
+        width: 1200,
+        height: 630,
         headers: {
-          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+          'Cache-Control': 'public, max-age=31536000, immutable',
         },
       }
     );
   } catch (error) {
-    console.error('Error generating Character OpenGraph image:', error);
-
-    // Return a fallback image on error
     return new ImageResponse(
       (
         <div
@@ -309,9 +219,10 @@ export default async function OpengraphImage({ params }: OpengraphImageProps) {
         </div>
       ),
       {
-        ...size,
+        width: 1200,
+        height: 630,
         headers: {
-          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+          'Cache-Control': 'public, max-age=31536000, immutable',
         },
       }
     );

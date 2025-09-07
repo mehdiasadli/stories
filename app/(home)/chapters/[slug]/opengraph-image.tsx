@@ -2,7 +2,8 @@ import { getChapter } from '@/lib/fetchers';
 import { format } from 'date-fns';
 import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 export const alt = 'Chapter OpenGraph Image';
 export const size = {
   width: 1200,
@@ -39,7 +40,7 @@ export default async function OpengraphImage({ params }: OpengraphImageProps) {
         {
           ...size,
           headers: {
-            'Cache-Control': 'public, max-age=31536000, immutable',
+            'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
           },
         }
       );
@@ -211,7 +212,7 @@ export default async function OpengraphImage({ params }: OpengraphImageProps) {
       {
         ...size,
         headers: {
-          'Cache-Control': 'public, max-age=31536000, immutable',
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
         },
       }
     );
@@ -238,7 +239,7 @@ export default async function OpengraphImage({ params }: OpengraphImageProps) {
       {
         ...size,
         headers: {
-          'Cache-Control': 'public, max-age=31536000, immutable',
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
         },
       }
     );

@@ -2,8 +2,9 @@
 import { getCharacter } from '@/lib/fetchers';
 import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
-export const alt = 'Character OpenGraph Image';
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+export const alt = 'Chapter OpenGraph Image';
 export const size = {
   width: 1200,
   height: 630,
@@ -21,7 +22,6 @@ export default async function OpengraphImage({ params }: OpengraphImageProps) {
     const { slug } = await params;
     const character = await getCharacter(slug);
 
-    // Add error handling for missing characters
     if (!character) {
       return new ImageResponse(
         (
@@ -42,7 +42,7 @@ export default async function OpengraphImage({ params }: OpengraphImageProps) {
         {
           ...size,
           headers: {
-            'Cache-Control': 'public, max-age=31536000, immutable',
+            'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
           },
         }
       );
@@ -287,7 +287,7 @@ export default async function OpengraphImage({ params }: OpengraphImageProps) {
       {
         ...size,
         headers: {
-          'Cache-Control': 'public, max-age=31536000, immutable',
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
         },
       }
     );
@@ -314,7 +314,7 @@ export default async function OpengraphImage({ params }: OpengraphImageProps) {
       {
         ...size,
         headers: {
-          'Cache-Control': 'public, max-age=31536000, immutable',
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
         },
       }
     );

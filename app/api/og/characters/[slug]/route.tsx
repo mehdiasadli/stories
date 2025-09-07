@@ -3,24 +3,13 @@ import { ImageResponse } from 'next/og';
 
 export const runtime = 'nodejs';
 
-export async function GET(request: Request, { params }: { params: { slug: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
-    console.log('🔍 OG Debug - Character slug:', params.slug);
+    const { slug } = await params;
 
-    const character = await getCharacter(params.slug);
-
-    console.log('👤 Character data:', {
-      found: !!character,
-      name: character?.name,
-      description: character?.description,
-      profileImageUrl: character?.profileImageUrl,
-      published: character?.published,
-      aliases: character?.aliases,
-      counts: character?._count,
-    });
+    const character = await getCharacter(slug);
 
     if (!character) {
-      console.log('❌ No character found, showing fallback');
       return new ImageResponse(
         (
           <div
@@ -37,8 +26,10 @@ export async function GET(request: Request, { params }: { params: { slug: string
               textAlign: 'center',
             }}
           >
-            <div style={{ fontSize: 48, color: '#2f2b24', marginBottom: '20px' }}>Character Not Found</div>
-            <div style={{ fontSize: 24, color: '#6b6558' }}>Slug: {params.slug}</div>
+            <div style={{ display: 'flex', fontSize: 48, color: '#2f2b24', marginBottom: '20px' }}>
+              Character Not Found
+            </div>
+            <div style={{ display: 'flex', fontSize: 24, color: '#6b6558' }}>Slug: {slug}</div>
           </div>
         ),
         {
@@ -47,8 +38,6 @@ export async function GET(request: Request, { params }: { params: { slug: string
         }
       );
     }
-
-    console.log('✅ Character found, rendering full image');
 
     return new ImageResponse(
       (
@@ -63,24 +52,22 @@ export async function GET(request: Request, { params }: { params: { slug: string
             fontFamily: 'Times New Roman, Times, serif',
           }}
         >
-          {/* Header spacing */}
-          <div style={{ padding: '40px 48px 0 48px' }} />
+          <div style={{ display: 'flex', padding: '40px 48px 0 48px' }} />
 
-          {/* Content: two-column */}
           <div
             style={{
               padding: '0 64px 96px 64px',
               flex: 1,
-              display: 'grid',
-              gridTemplateColumns: '420px 1fr',
+              display: 'flex',
+              flexDirection: 'row',
               gap: '40px',
               alignItems: 'center',
               color: '#2f2b24',
             }}
           >
-            {/* Left: portrait */}
             <div
               style={{
+                display: 'flex',
                 height: '420px',
                 width: '420px',
                 borderRadius: '12px',
@@ -92,6 +79,7 @@ export async function GET(request: Request, { params }: { params: { slug: string
               {character.profileImageUrl ? (
                 <div
                   style={{
+                    display: 'flex',
                     height: '100%',
                     width: '100%',
                     backgroundImage: `url(${character.profileImageUrl})`,
@@ -102,9 +90,9 @@ export async function GET(request: Request, { params }: { params: { slug: string
               ) : (
                 <div
                   style={{
+                    display: 'flex',
                     height: '100%',
                     width: '100%',
-                    display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: '#6b5e45',
@@ -125,10 +113,10 @@ export async function GET(request: Request, { params }: { params: { slug: string
               )}
             </div>
 
-            {/* Right: text */}
-            <div style={{ paddingRight: '24px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '24px', flex: 1 }}>
               <div
                 style={{
+                  display: 'flex',
                   color: '#6b6558',
                   fontSize: '34px',
                   lineHeight: 1,
@@ -139,6 +127,7 @@ export async function GET(request: Request, { params }: { params: { slug: string
               </div>
               <div
                 style={{
+                  display: 'flex',
                   marginTop: '16px',
                   color: '#1f1b15',
                   fontSize: '64px',
@@ -153,6 +142,7 @@ export async function GET(request: Request, { params }: { params: { slug: string
               {character.description && (
                 <div
                   style={{
+                    display: 'flex',
                     marginTop: '16px',
                     color: '#4a463f',
                     fontSize: '20px',
@@ -163,6 +153,67 @@ export async function GET(request: Request, { params }: { params: { slug: string
                   {character.description}
                 </div>
               )}
+            </div>
+          </div>
+
+          <div
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: 'flex',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                padding: '16px 40px',
+                borderTop: '1px solid #d8d3c4',
+                backgroundColor: '#f3efe6',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '24px',
+                  color: '#4a463f',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '20px',
+                    fontSize: '13px',
+                  }}
+                >
+                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                    <span style={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
+                      {character._count?.chapters || 0}
+                    </span>
+                    <span style={{ display: 'flex' }}>iştirak</span>
+                  </span>
+                  <span style={{ display: 'flex', color: '#d0cabc' }}>•</span>
+                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                    <span style={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
+                      {character._count?.views || 0}
+                    </span>
+                    <span style={{ display: 'flex' }}>baxış</span>
+                  </span>
+                  <span style={{ display: 'flex', color: '#d0cabc' }}>•</span>
+                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                    <span style={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
+                      {character._count?.favorites || 0}
+                    </span>
+                    <span style={{ display: 'flex' }}>favorit</span>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -176,8 +227,6 @@ export async function GET(request: Request, { params }: { params: { slug: string
       }
     );
   } catch (error) {
-    console.error('❌ Error in character OG generation:', error);
-
     return new ImageResponse(
       (
         <div
@@ -194,8 +243,10 @@ export async function GET(request: Request, { params }: { params: { slug: string
             textAlign: 'center',
           }}
         >
-          <div style={{ fontSize: 48, color: '#2f2b24', marginBottom: '20px' }}>Error Generating Image</div>
-          <div style={{ fontSize: 24, color: '#6b6558' }}>
+          <div style={{ display: 'flex', fontSize: 48, color: '#2f2b24', marginBottom: '20px' }}>
+            Error Generating Image
+          </div>
+          <div style={{ display: 'flex', fontSize: 24, color: '#6b6558' }}>
             {error instanceof Error ? error.message : 'Unknown error'}
           </div>
         </div>

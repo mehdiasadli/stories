@@ -1,27 +1,17 @@
 import { getChapter } from '@/lib/fetchers';
 import { format } from 'date-fns';
+import { az } from 'date-fns/locale';
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'nodejs';
 
-export async function GET(request: Request, { params }: { params: { slug: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
-    console.log('🔍 OG Debug - Chapter slug:', params.slug);
+    const { slug } = await params;
 
-    const chapter = await getChapter(params.slug);
+    const chapter = await getChapter(slug);
 
-    console.log('📚 Chapter data:', {
-      found: !!chapter,
-      title: chapter?.title,
-      order: chapter?.order,
-      synopsis: chapter?.synopsis,
-      author: chapter?.author?.name,
-      counts: chapter?._count,
-    });
-
-    // If no chapter found, show debug info
     if (!chapter) {
-      console.log('❌ No chapter found, showing fallback');
       return new ImageResponse(
         (
           <div
@@ -38,8 +28,10 @@ export async function GET(request: Request, { params }: { params: { slug: string
               textAlign: 'center',
             }}
           >
-            <div style={{ fontSize: 48, color: '#2f2b24', marginBottom: '20px' }}>Chapter Not Found</div>
-            <div style={{ fontSize: 24, color: '#6b6558' }}>Slug: {params.slug}</div>
+            <div style={{ display: 'flex', fontSize: 48, color: '#2f2b24', marginBottom: '20px' }}>
+              Chapter Not Found
+            </div>
+            <div style={{ display: 'flex', fontSize: 24, color: '#6b6558' }}>Slug: {slug}</div>
           </div>
         ),
         {
@@ -48,9 +40,6 @@ export async function GET(request: Request, { params }: { params: { slug: string
         }
       );
     }
-
-    // If chapter exists, show full data
-    console.log('✅ Chapter found, rendering full image');
 
     return new ImageResponse(
       (
@@ -62,13 +51,10 @@ export async function GET(request: Request, { params }: { params: { slug: string
             display: 'flex',
             flexDirection: 'column',
             background: 'radial-gradient(1200px 600px at 50% 40%, #f7f3e9 0%, #f1ecdf 60%, #ebe5d7 100%)',
-            fontFamily: 'Times New Roman, Times, serif',
           }}
         >
-          {/* Header spacing */}
-          <div style={{ padding: '40px 48px 0 48px' }} />
+          <div style={{ display: 'flex', padding: '40px 48px 0 48px' }}></div>
 
-          {/* Content */}
           <div
             style={{
               padding: '0 64px 96px 64px',
@@ -79,9 +65,19 @@ export async function GET(request: Request, { params }: { params: { slug: string
               color: '#2f2b24',
             }}
           >
-            <div style={{ width: '100%', maxWidth: '900px', textAlign: 'center' }}>
+            <div
+              style={{
+                width: '100%',
+                maxWidth: '900px',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
               <div
                 style={{
+                  display: 'flex',
                   color: '#6b6558',
                   fontSize: '34px',
                   lineHeight: 1,
@@ -90,8 +86,10 @@ export async function GET(request: Request, { params }: { params: { slug: string
               >
                 mahmud • bölüm #{chapter.order || '?'}
               </div>
+
               <div
                 style={{
+                  display: 'flex',
                   marginTop: '16px',
                   color: '#1f1b15',
                   fontSize: '64px',
@@ -104,8 +102,10 @@ export async function GET(request: Request, { params }: { params: { slug: string
               >
                 {chapter.title || 'Başlıq yoxdur'}
               </div>
+
               <div
                 style={{
+                  display: 'flex',
                   marginTop: '24px',
                   color: '#4a463f',
                   fontSize: '22px',
@@ -116,6 +116,7 @@ export async function GET(request: Request, { params }: { params: { slug: string
               >
                 {chapter.synopsis || 'bu bölüm haqqında təsvir mövcud deyil.'}
               </div>
+
               <div
                 style={{
                   marginTop: '32px',
@@ -126,24 +127,27 @@ export async function GET(request: Request, { params }: { params: { slug: string
                   color: '#6b6558',
                 }}
               >
-                <div style={{ fontSize: '16px' }}>
+                <div style={{ display: 'flex', fontSize: '16px' }}>
                   <span style={{ color: '#2f2b24', fontWeight: 600 }}>{chapter.author?.name || 'yazar tapılmadı'}</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Footer */}
           <div
             style={{
               position: 'absolute',
               left: 0,
               right: 0,
               bottom: 0,
+              display: 'flex',
             }}
           >
             <div
               style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
                 padding: '16px 40px',
                 borderTop: '1px solid #d8d3c4',
                 backgroundColor: '#f3efe6',
@@ -167,31 +171,31 @@ export async function GET(request: Request, { params }: { params: { slug: string
                   }}
                 >
                   <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
+                    <span style={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
                       {chapter._count?.reads || 0}
                     </span>
-                    <span>oxuma</span>
+                    <span style={{ display: 'flex' }}>oxuma</span>
                   </span>
-                  <span style={{ color: '#d0cabc' }}>•</span>
+                  <span style={{ display: 'flex', color: '#d0cabc' }}>•</span>
                   <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
+                    <span style={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
                       {chapter._count?.favorites || 0}
                     </span>
-                    <span>favorit</span>
+                    <span style={{ display: 'flex' }}>favorit</span>
                   </span>
-                  <span style={{ color: '#d0cabc' }}>•</span>
+                  <span style={{ display: 'flex', color: '#d0cabc' }}>•</span>
                   <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
+                    <span style={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
                       {chapter._count?.comments || 0}
                     </span>
-                    <span>şərh</span>
+                    <span style={{ display: 'flex' }}>şərh</span>
                   </span>
                 </div>
 
-                <div>
+                <div style={{ display: 'flex' }}>
                   {chapter.publishedAt && (
-                    <div style={{ fontSize: '15px', color: '#6b6558', whiteSpace: 'nowrap' }}>
-                      {format(new Date(chapter.publishedAt), 'd MMMM yyyy, HH:mm')}
+                    <div style={{ display: 'flex', fontSize: '15px', color: '#6b6558', whiteSpace: 'nowrap' }}>
+                      {format(new Date(chapter.publishedAt), 'd MMMM yyyy, HH:mm', { locale: az })}
                     </div>
                   )}
                 </div>
@@ -209,8 +213,6 @@ export async function GET(request: Request, { params }: { params: { slug: string
       }
     );
   } catch (error) {
-    console.error('❌ Error in chapter OG generation:', error);
-
     return new ImageResponse(
       (
         <div
@@ -227,8 +229,10 @@ export async function GET(request: Request, { params }: { params: { slug: string
             textAlign: 'center',
           }}
         >
-          <div style={{ fontSize: 48, color: '#2f2b24', marginBottom: '20px' }}>Error Generating Image</div>
-          <div style={{ fontSize: 24, color: '#6b6558' }}>
+          <div style={{ display: 'flex', fontSize: 48, color: '#2f2b24', marginBottom: '20px' }}>
+            Error Generating Image
+          </div>
+          <div style={{ display: 'flex', fontSize: 24, color: '#6b6558' }}>
             {error instanceof Error ? error.message : 'Unknown error'}
           </div>
         </div>

@@ -480,6 +480,13 @@ export const getCharacter = cache(async (characterSlug: string) => {
       slug: characterSlug,
     },
     include: {
+      _count: {
+        select: {
+          views: true,
+          favorites: true,
+          chapters: true,
+        },
+      },
       chapters: {
         select: {
           appearanceType: true,

@@ -1,13 +1,15 @@
 import { getChapter } from '@/lib/fetchers';
-import { ImageResponse } from 'next/og';
 import { format } from 'date-fns';
+import { ImageResponse } from 'next/og';
 
 export const size = {
   width: 1200,
   height: 630,
 } as const;
 
-interface OpengraphImageProps extends PageProps<'/chapters/[slug]'> {}
+interface OpengraphImageProps {
+  params: Promise<{ slug: string }>;
+}
 
 export async function OpengraphImage({ params }: OpengraphImageProps) {
   const { slug } = await params;

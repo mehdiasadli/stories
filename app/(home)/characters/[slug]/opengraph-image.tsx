@@ -8,7 +8,9 @@ export const size = {
 
 const SHOW_ALIASES_COUNT = 6;
 
-interface OpengraphImageProps extends PageProps<'/characters/[slug]'> {}
+interface OpengraphImageProps {
+  params: Promise<{ slug: string }>;
+}
 
 export async function OpengraphImage({ params }: OpengraphImageProps) {
   const { slug } = await params;

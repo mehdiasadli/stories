@@ -4,12 +4,24 @@ import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
 
-export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
+export async function GET(request: Request, { params }: { params: { slug: string } }) {
   try {
-    const { slug } = await params;
-    const chapter = await getChapter(slug);
+    console.log('🔍 OG Debug - Chapter slug:', params.slug);
 
+    const chapter = await getChapter(params.slug);
+
+    console.log('📚 Chapter data:', {
+      found: !!chapter,
+      title: chapter?.title,
+      order: chapter?.order,
+      synopsis: chapter?.synopsis,
+      author: chapter?.author?.name,
+      counts: chapter?._count,
+    });
+
+    // If no chapter found, show debug info
     if (!chapter) {
+      console.log('❌ No chapter found, showing fallback');
       return new ImageResponse(
         (
           <div
@@ -17,24 +29,28 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
               width: '100%',
               height: '100%',
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              background: 'radial-gradient(1200px 600px at 50% 40%, #f7f3e9 0%, #f1ecdf 60%, #ebe5d7 100%)',
+              background: '#f7f3e9',
               fontFamily: 'Times New Roman, Times, serif',
+              padding: '40px',
+              textAlign: 'center',
             }}
           >
-            <div style={{ fontSize: 64, color: '#2f2b24' }}>bölüm tapılmadı</div>
+            <div style={{ fontSize: 48, color: '#2f2b24', marginBottom: '20px' }}>Chapter Not Found</div>
+            <div style={{ fontSize: 24, color: '#6b6558' }}>Slug: {params.slug}</div>
           </div>
         ),
         {
           width: 1200,
           height: 630,
-          headers: {
-            'Cache-Control': 'public, max-age=31536000, immutable',
-          },
         }
       );
     }
+
+    // If chapter exists, show full data
+    console.log('✅ Chapter found, rendering full image');
 
     return new ImageResponse(
       (
@@ -72,7 +88,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                   fontStyle: 'italic',
                 }}
               >
-                mahmud • bölüm #{chapter.order}
+                mahmud • bölüm #{chapter.order || '?'}
               </div>
               <div
                 style={{
@@ -82,9 +98,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                   lineHeight: 1.05,
                   fontWeight: 600,
                   letterSpacing: '-0.02em',
+                  wordWrap: 'break-word',
+                  maxWidth: '100%',
                 }}
               >
-                {chapter.title}
+                {chapter.title || 'Başlıq yoxdur'}
               </div>
               <div
                 style={{
@@ -92,9 +110,25 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                   color: '#4a463f',
                   fontSize: '22px',
                   lineHeight: 1.3,
+                  wordWrap: 'break-word',
+                  maxWidth: '100%',
                 }}
               >
                 {chapter.synopsis || 'bu bölüm haqqında təsvir mövcud deyil.'}
+              </div>
+              <div
+                style={{
+                  marginTop: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '24px',
+                  color: '#6b6558',
+                }}
+              >
+                <div style={{ fontSize: '16px' }}>
+                  <span style={{ color: '#2f2b24', fontWeight: 600 }}>{chapter.author?.name || 'yazar tapılmadı'}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -145,11 +179,18 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                     </span>
                     <span>favorit</span>
                   </span>
+                  <span style={{ color: '#d0cabc' }}>•</span>
+                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                    <span style={{ fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
+                      {chapter._count?.comments || 0}
+                    </span>
+                    <span>şərh</span>
+                  </span>
                 </div>
 
                 <div>
                   {chapter.publishedAt && (
-                    <div style={{ fontSize: '15px', color: '#6b6558' }}>
+                    <div style={{ fontSize: '15px', color: '#6b6558', whiteSpace: 'nowrap' }}>
                       {format(new Date(chapter.publishedAt), 'd MMMM yyyy, HH:mm')}
                     </div>
                   )}
@@ -168,7 +209,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       }
     );
   } catch (error) {
-    console.error('Error generating Chapter OpenGraph image:', error);
+    console.error('❌ Error in chapter OG generation:', error);
 
     return new ImageResponse(
       (
@@ -177,21 +218,24 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
             width: '100%',
             height: '100%',
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             background: '#f7f3e9',
             fontFamily: 'Times New Roman, Times, serif',
+            padding: '40px',
+            textAlign: 'center',
           }}
         >
-          <div style={{ fontSize: 48, color: '#2f2b24' }}>mahmud</div>
+          <div style={{ fontSize: 48, color: '#2f2b24', marginBottom: '20px' }}>Error Generating Image</div>
+          <div style={{ fontSize: 24, color: '#6b6558' }}>
+            {error instanceof Error ? error.message : 'Unknown error'}
+          </div>
         </div>
       ),
       {
         width: 1200,
         height: 630,
-        headers: {
-          'Cache-Control': 'public, max-age=31536000, immutable',
-        },
       }
     );
   }

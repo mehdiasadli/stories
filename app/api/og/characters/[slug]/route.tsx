@@ -3,12 +3,24 @@ import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
 
-export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
+export async function GET(request: Request, { params }: { params: { slug: string } }) {
   try {
-    const { slug } = await params;
-    const character = await getCharacter(slug);
+    console.log('🔍 OG Debug - Character slug:', params.slug);
+
+    const character = await getCharacter(params.slug);
+
+    console.log('👤 Character data:', {
+      found: !!character,
+      name: character?.name,
+      description: character?.description,
+      profileImageUrl: character?.profileImageUrl,
+      published: character?.published,
+      aliases: character?.aliases,
+      counts: character?._count,
+    });
 
     if (!character) {
+      console.log('❌ No character found, showing fallback');
       return new ImageResponse(
         (
           <div
@@ -16,24 +28,27 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
               width: '100%',
               height: '100%',
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              background: 'radial-gradient(1200px 600px at 50% 40%, #ffffff 0%, #fbfaf7 60%, #f6f3ec 100%)',
+              background: '#fbfaf7',
               fontFamily: 'Times New Roman, Times, serif',
+              padding: '40px',
+              textAlign: 'center',
             }}
           >
-            <div style={{ fontSize: 64, color: '#2f2b24' }}>personaj tapılmadı</div>
+            <div style={{ fontSize: 48, color: '#2f2b24', marginBottom: '20px' }}>Character Not Found</div>
+            <div style={{ fontSize: 24, color: '#6b6558' }}>Slug: {params.slug}</div>
           </div>
         ),
         {
           width: 1200,
           height: 630,
-          headers: {
-            'Cache-Control': 'public, max-age=31536000, immutable',
-          },
         }
       );
     }
+
+    console.log('✅ Character found, rendering full image');
 
     return new ImageResponse(
       (
@@ -130,9 +145,10 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                   lineHeight: 1.05,
                   fontWeight: 600,
                   letterSpacing: '-0.02em',
+                  wordWrap: 'break-word',
                 }}
               >
-                {character.name}
+                {character.name || 'personaj tapılmadı'}
               </div>
               {character.description && (
                 <div
@@ -141,55 +157,12 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                     color: '#4a463f',
                     fontSize: '20px',
                     lineHeight: 1.3,
+                    wordWrap: 'break-word',
                   }}
                 >
                   {character.description}
                 </div>
               )}
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              bottom: 0,
-            }}
-          >
-            <div
-              style={{
-                padding: '16px 40px',
-                borderTop: '1px solid #d8d3c4',
-                backgroundColor: '#fbfaf7',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  color: '#4a463f',
-                  fontSize: '13px',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
-                      {character._count?.chapters || 0}
-                    </span>
-                    <span>iştirak</span>
-                  </span>
-                  <span style={{ color: '#d0cabc' }}>•</span>
-                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
-                      {character._count?.views || 0}
-                    </span>
-                    <span>baxış</span>
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -203,6 +176,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       }
     );
   } catch (error) {
+    console.error('❌ Error in character OG generation:', error);
+
     return new ImageResponse(
       (
         <div
@@ -210,21 +185,24 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
             width: '100%',
             height: '100%',
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             background: '#fbfaf7',
             fontFamily: 'Times New Roman, Times, serif',
+            padding: '40px',
+            textAlign: 'center',
           }}
         >
-          <div style={{ fontSize: 48, color: '#2f2b24' }}>mahmud • personaj</div>
+          <div style={{ fontSize: 48, color: '#2f2b24', marginBottom: '20px' }}>Error Generating Image</div>
+          <div style={{ fontSize: 24, color: '#6b6558' }}>
+            {error instanceof Error ? error.message : 'Unknown error'}
+          </div>
         </div>
       ),
       {
         width: 1200,
         height: 630,
-        headers: {
-          'Cache-Control': 'public, max-age=31536000, immutable',
-        },
       }
     );
   }

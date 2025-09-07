@@ -9,11 +9,11 @@ export default function HomeLayout({ children }: { children: React.ReactNode }) 
           <div className='flex items-center gap-8'>
             {/* Logo */}
             <Link href='/' className='flex items-center gap-3'>
-              <span className='text-xl font-serif text-gray-900 hidden sm:inline'>mahmud</span>
+              <span className='text-xl font-serif text-gray-900 sm:inline'>mahmud</span>
             </Link>
 
             {/* Desktop Navigation Links */}
-            <nav className='hidden md:flex items-center gap-6'>
+            <nav className='md:flex items-center gap-6'>
               <Link href='/characters' className='text-sm text-gray-600 hover:text-gray-900 transition-colors'>
                 wiki
               </Link>

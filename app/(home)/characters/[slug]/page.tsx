@@ -20,15 +20,15 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: CharacterPageProps): Promise<Metadata> {
   const { slug } = await params;
-
   const character = await getCharacter(slug);
 
   if (!character || !character.published) {
     return {
-      title: 'Tapılmadı',
+      title: 'personaj tapılmadı',
     };
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
   const openGraphTitle = `${character.name} • mahmud əsərinin personajı.`;
   const description =
     character.description || character.nameDescription || `${character.name} haqqında məlumat toplayın`;
@@ -48,13 +48,22 @@ export async function generateMetadata({ params }: CharacterPageProps): Promise<
     twitter: {
       title: openGraphTitle,
       description,
+      card: 'summary_large_image',
+      images: [`${baseUrl}/characters/${slug}/opengraph-image`],
     },
     openGraph: {
       title: openGraphTitle,
       description,
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/characters/${character.slug}`,
+      url: `${baseUrl}/characters/${character.slug}`,
       type: 'profile',
-      images: character.profileImageUrl ? [character.profileImageUrl] : undefined,
+      images: [
+        {
+          url: `${baseUrl}/characters/${slug}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: openGraphTitle,
+        },
+      ],
     },
   };
 }

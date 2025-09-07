@@ -28,12 +28,13 @@ export async function generateMetadata({ params }: ChapterPageProps): Promise<Me
 
   if (!chapter) {
     return {
-      title: 'Tapılmadı',
+      title: 'bölüm tapılmadı',
     };
   }
 
-  const openGraphTitle = `"${chapter.title}" bölümünü oxu ("mahmud")`;
-  const synopsis = chapter.synopsis || 'məlumat yoxdur';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const openGraphTitle = `"${chapter.title}" bölümünü oxu • mahmud`;
+  const synopsis = chapter.synopsis || 'bu bölüm haqqında təsvir mövcud deyil.';
 
   return {
     title: chapter.title,
@@ -45,6 +46,7 @@ export async function generateMetadata({ params }: ChapterPageProps): Promise<Me
       title: openGraphTitle,
       description: synopsis,
       card: 'summary_large_image',
+      images: [`${baseUrl}/chapters/${slug}/opengraph-image`],
     },
     pinterest: {
       richPin: true,
@@ -53,12 +55,20 @@ export async function generateMetadata({ params }: ChapterPageProps): Promise<Me
       title: openGraphTitle,
       type: 'website',
       description: synopsis,
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/${slug}`,
+      url: `${baseUrl}/chapters/${slug}`,
+      images: [
+        {
+          url: `${baseUrl}/chapters/${slug}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: openGraphTitle,
+        },
+      ],
     },
     bookmarks: ['mahmud', chapter.title, chapter.synopsis].filter(Boolean) as string[],
     appLinks: {
       web: {
-        url: `${process.env.NEXT_PUBLIC_APP_URL}/${slug}`,
+        url: `${baseUrl}/chapters/${slug}`,
       },
     },
     category: 'Reading',

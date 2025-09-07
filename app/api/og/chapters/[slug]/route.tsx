@@ -4,9 +4,10 @@ import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
 
-export async function GET(request: Request, { params }: { params: { slug: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
-    const chapter = await getChapter(params.slug);
+    const { slug } = await params;
+    const chapter = await getChapter(slug);
 
     if (!chapter) {
       return new ImageResponse(
@@ -22,7 +23,7 @@ export async function GET(request: Request, { params }: { params: { slug: string
               fontFamily: 'Times New Roman, Times, serif',
             }}
           >
-            <div style={{ fontSize: 64, color: '#2f2b24' }}>Bölüm tapılmadı</div>
+            <div style={{ fontSize: 64, color: '#2f2b24' }}>bölüm tapılmadı</div>
           </div>
         ),
         {

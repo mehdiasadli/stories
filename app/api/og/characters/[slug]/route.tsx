@@ -3,9 +3,10 @@ import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
 
-export async function GET(request: Request, { params }: { params: { slug: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
-    const character = await getCharacter(params.slug);
+    const { slug } = await params;
+    const character = await getCharacter(slug);
 
     if (!character) {
       return new ImageResponse(
@@ -21,7 +22,7 @@ export async function GET(request: Request, { params }: { params: { slug: string
               fontFamily: 'Times New Roman, Times, serif',
             }}
           >
-            <div style={{ fontSize: 64, color: '#2f2b24' }}>Personaj tapılmadı</div>
+            <div style={{ fontSize: 64, color: '#2f2b24' }}>personaj tapılmadı</div>
           </div>
         ),
         {

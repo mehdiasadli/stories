@@ -2,7 +2,7 @@ import { getChapter } from '@/lib/fetchers';
 import { format } from 'date-fns';
 import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function GET(request: Request, { params }: { params: { slug: string } }) {
   try {

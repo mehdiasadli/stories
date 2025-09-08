@@ -38,32 +38,32 @@ export default function AboutPage() {
       <p className='text-sm text-gray-600 mb-4 text-center'>mahmud əsəri haqqında ümumi məlumat</p>
       <article className='prose prose-lg max-w-none text-justify font-serif'>
         <p>
-          "mahmud" əsəri Mehdi Əsədli tərəfindən bədahətən və şifahi danışılan Mahmud adlı personajın həyatından
-          danışır. Bu personaj, təxminən, 2020-ci ildə yaradılıb. Mahmud əvvəllər sonsuz həyatı olan və tarix boyu,
-          necəsə, bütün vacib hadisələrdə iştirak etmiş "karikaturist" biri idi. Bir neçə il sonra Mehdi Ə. "blogg" adlı
-          saytında bu personaj haqqında yazılı bölümlər paylaşmağa başladı. Mahmudun hekayələri oxucular tərəfindən
-          sevilsə də Mehdi Ə. bir müddət sonra bu hekayələri dayandırdı.
+          &quot;mahmud&quot; əsəri Mehdi Əsədli tərəfindən bədahətən və şifahi danışılan Mahmud adlı personajın
+          həyatından danışır. Bu personaj, təxminən, 2020-ci ildə yaradılıb. Mahmud əvvəllər sonsuz həyatı olan və tarix
+          boyu, necəsə, bütün vacib hadisələrdə iştirak etmiş &quot;karikaturist&quot; biri idi. Bir neçə il sonra Mehdi
+          Ə. &quot;blogg&quot; adlı saytında bu personaj haqqında yazılı bölümlər paylaşmağa başladı. Mahmudun
+          hekayələri oxucular tərəfindən sevilsə də Mehdi Ə. bir müddət sonra bu hekayələri dayandırdı.
         </p>
         <br />
         <p>
           İllər sonra Mehdi Ə. yenidən Mahmudun həyatını yazmaq barəsində düşünməyə başladı və bu səfər hekayənin
           absurdluğunu, nisbətən, azaldaraq, daha mürəkkəb və daha realist bir hekayə yaratmaq istədi və sonunda bu
           fikir reallaşır. Bu səfər yeganə baxış bucağı olan personaj Mahmud deyil və Mahmuddan əlavə onlarla fərqli
-          "baş" personaj deyə biləcəyimiz obraz var.
+          &quot;baş&quot; personaj deyə biləcəyimiz obraz var.
         </p>
         <br />
         <p>
           Ölümsüz bir personaj olan Mahmudun ölümsüzlüyünün səbəbini axtarmasını oxumaq istəyirsinizsə, bu saytdan
-          bölümlərlə tanış ola bilərsiniz. Saytda bölümlərdən əlavə "wiki" hissəsində personajlar haqqında da məlumat
-          toplamaq mümkündür.
+          bölümlərlə tanış ola bilərsiniz. Saytda bölümlərdən əlavə &quot;wiki&quot; hissəsində personajlar haqqında da
+          məlumat toplamaq mümkündür.
         </p>
         <br />
         <p>Qeydiyyatdan keçib hesabınıza daxil olaraq:</p>
         <ul>
-          <li>• bölümləri "oxundu" olaraq işarələyə bilərsiniz</li>
-          <li>• sevdiyiniz bölümləri "favoritləyə" bilərsiniz</li>
+          <li>• bölümləri &quot;oxundu&quot; olaraq işarələyə bilərsiniz</li>
+          <li>• sevdiyiniz bölümləri &quot;favoritləyə&quot; bilərsiniz</li>
           <li>• bölümlərin diskusiya hissəsində şərhlər yaza bilərsiniz</li>
-          <li>• sevdiyiniz personajları "favoritləyə" bilərsiniz</li>
+          <li>• sevdiyiniz personajları &quot;favoritləyə&quot; bilərsiniz</li>
           {/* <li>• yeni bölüm paylaşıldıqda elektron poçtunuza xəbər ala bilərsiniz</li> */}
         </ul>
       </article>

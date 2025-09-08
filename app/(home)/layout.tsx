@@ -1,3 +1,4 @@
+import Logo from '@/components/logo';
 import { NavUser } from '@/components/nav-user';
 import Link from 'next/link';
 
@@ -6,23 +7,18 @@ export default function HomeLayout({ children }: { children: React.ReactNode }) 
     <div className='min-h-screen bg-white'>
       <header className='border-b border-gray-200 bg-white'>
         <div className='flex items-center justify-between px-4 sm:px-6 py-4'>
-          <div className='flex items-center gap-8'>
-            {/* Logo */}
+          <div className='flex items-center gap-6'>
             <Link href='/' className='flex items-center gap-3'>
-              <span className='text-xl font-serif text-gray-900 sm:inline'>mahmud</span>
+              <Logo size={25} />
             </Link>
 
-            {/* Desktop Navigation Links */}
             <nav className='md:flex items-center gap-6'>
+              <Link href='/' className='hidden md:block text-sm text-gray-600 hover:text-gray-900 transition-colors'>
+                bölümlər
+              </Link>
               <Link href='/characters' className='text-sm text-gray-600 hover:text-gray-900 transition-colors'>
                 wiki
               </Link>
-              {/* <Link href='/explore' className='text-sm text-gray-600 hover:text-gray-900 transition-colors'>
-                Explore
-              </Link>
-              <Link href='/characters' className='text-sm text-gray-600 hover:text-gray-900 transition-colors'>
-                Characters
-              </Link> */}
             </nav>
           </div>
 

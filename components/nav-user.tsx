@@ -39,7 +39,7 @@ export function NavUser() {
             href='/dashboard/chapters'
             className='flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors'
           >
-            <span>dashboard</span>
+            dashboard
           </Link>
         )}
         <button

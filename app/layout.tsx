@@ -4,8 +4,8 @@ import Script from 'next/script';
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
 import { az } from 'date-fns/locale';
-import { Analytics as VercelAnalytics } from '@vercel/analytics/react';
-import { GoogleAnalytics } from '@next/third-parties/google';
+import { Analytics } from '@vercel/analytics/react';
+// import { GoogleAnalytics } from '@next/third-parties/google';
 import { setDefaultOptions } from 'date-fns';
 
 setDefaultOptions({ locale: az });
@@ -97,10 +97,7 @@ export default function RootLayout({
         <meta name='apple-mobile-web-app-title' content='mahmud' />
         {/* <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID!} /> */}
 
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID!}`}
-          strategy='afterInteractive'
-        />
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=G-8WFVH21Y3L`} strategy='afterInteractive' />
         <Script
           id='gtag-init'
           strategy='afterInteractive'
@@ -109,7 +106,7 @@ export default function RootLayout({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', '${process.env.NEXT_PUBLIC_GA_ID!}');
+              gtag('config', 'G-8WFVH21Y3L');
             `,
           }}
         />
@@ -117,7 +114,7 @@ export default function RootLayout({
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionProvider>{children}</SessionProvider>
-        <VercelAnalytics />
+        <Analytics />
       </body>
     </html>
   );

@@ -12,9 +12,12 @@ export default function HomeLayout({ children }: { children: React.ReactNode }) 
               <Logo size={25} />
             </Link>
 
-            <nav className='md:flex items-center gap-6'>
+            <nav className='flex items-center gap-6'>
               <Link href='/' className='hidden md:block text-sm text-gray-600 hover:text-gray-900 transition-colors'>
                 bölümlər
+              </Link>
+              <Link href='/about' className='text-sm text-gray-600 hover:text-gray-900 transition-colors'>
+                haqqında
               </Link>
               <Link href='/characters' className='text-sm text-gray-600 hover:text-gray-900 transition-colors'>
                 wiki

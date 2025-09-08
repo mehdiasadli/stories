@@ -743,3 +743,147 @@ export const getWikiCharacters = cache(async () => {
     mostAppearedCharacters,
   };
 });
+
+export const getReadersOfChapter = cache(async (chapterSlug: string) => {
+  const chapter = await prisma.chapter.findUnique({
+    where: {
+      slug: chapterSlug,
+    },
+    select: {
+      title: true,
+      slug: true,
+    },
+  });
+
+  if (!chapter) {
+    return [];
+  }
+
+  const readers = await prisma.chapterRead.findMany({
+    where: {
+      chapter: {
+        slug: chapter.slug,
+      },
+    },
+    select: {
+      createdAt: true,
+      user: {
+        select: {
+          name: true,
+          slug: true,
+        },
+      },
+    },
+  });
+
+  return {
+    chapter,
+    readers,
+  };
+});
+
+export const getFavoritesOfChapter = cache(async (chapterSlug: string) => {
+  const chapter = await prisma.chapter.findUnique({
+    where: {
+      slug: chapterSlug,
+    },
+    select: {
+      title: true,
+      slug: true,
+    },
+  });
+
+  if (!chapter) {
+    return [];
+  }
+
+  const favorites = await prisma.favoriteChapter.findMany({
+    where: {
+      chapter: { slug: chapter.slug },
+    },
+    select: {
+      createdAt: true,
+      user: {
+        select: {
+          name: true,
+          slug: true,
+        },
+      },
+    },
+  });
+
+  return {
+    chapter,
+    favorites,
+  };
+});
+
+export const getViewsOfCharacter = cache(async (characterSlug: string) => {
+  const character = await prisma.character.findUnique({
+    where: {
+      slug: characterSlug,
+    },
+    select: {
+      name: true,
+      slug: true,
+    },
+  });
+
+  if (!character) {
+    return [];
+  }
+
+  const views = await prisma.characterView.findMany({
+    where: {
+      character: { slug: character.slug },
+    },
+    select: {
+      createdAt: true,
+      user: {
+        select: {
+          name: true,
+          slug: true,
+        },
+      },
+    },
+  });
+
+  return {
+    character,
+    views,
+  };
+});
+
+export const getFavoritesOfCharacter = cache(async (characterSlug: string) => {
+  const character = await prisma.character.findUnique({
+    where: {
+      slug: characterSlug,
+    },
+    select: {
+      name: true,
+      slug: true,
+    },
+  });
+
+  if (!character) {
+    return [];
+  }
+
+  const favorites = await prisma.favoriteCharacter.findMany({
+    where: { character: { slug: character.slug } },
+    select: {
+      createdAt: true,
+      user: {
+        select: {
+          name: true,
+          slug: true,
+        },
+      },
+    },
+  });
+
+  return {
+    character,
+    favorites,
+  };
+});

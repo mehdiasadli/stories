@@ -47,158 +47,197 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
           style={{
             width: '100%',
             height: '100%',
-            position: 'relative',
             display: 'flex',
             flexDirection: 'column',
-            background: 'radial-gradient(1200px 600px at 50% 40%, #f7f3e9 0%, #f1ecdf 60%, #ebe5d7 100%)',
+            justifyContent: 'space-between',
+            padding: '64px',
+            background: 'linear-gradient(135deg, #fefbf0 0%, #f8f2e4 25%, #f2ebd8 50%, #ece4cc 75%, #e6ddc0 100%)',
+            border: '12px solid #8b4513',
+            borderRadius: '8px',
+            position: 'relative',
+            fontFamily: "Georgia, 'Times New Roman', serif",
           }}
         >
-          <div style={{ display: 'flex', padding: '40px 48px 0 48px' }}></div>
-
-          <div
-            style={{
-              padding: '0 64px 96px 64px',
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              color: '#2f2b24',
-            }}
-          >
-            <div
-              style={{
-                width: '100%',
-                maxWidth: '900px',
-                textAlign: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  color: '#6b6558',
-                  fontSize: '34px',
-                  lineHeight: 1,
-                  fontStyle: 'italic',
-                }}
-              >
-                mahmud • bölüm #{chapter.order || '?'}
-              </div>
-
-              <div
-                style={{
-                  display: 'flex',
-                  marginTop: '16px',
-                  color: '#1f1b15',
-                  fontSize: '64px',
-                  lineHeight: 1.05,
-                  fontWeight: 600,
-                  letterSpacing: '-0.02em',
-                  wordWrap: 'break-word',
-                  maxWidth: '100%',
-                }}
-              >
-                {chapter.title || 'Başlıq yoxdur'}
-              </div>
-
-              <div
-                style={{
-                  display: 'flex',
-                  marginTop: '24px',
-                  color: '#4a463f',
-                  fontSize: '22px',
-                  lineHeight: 1.3,
-                  wordWrap: 'break-word',
-                  maxWidth: '100%',
-                }}
-              >
-                {chapter.synopsis || 'bu bölüm haqqında təsvir mövcud deyil.'}
-              </div>
-
-              <div
-                style={{
-                  marginTop: '32px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '24px',
-                  color: '#6b6558',
-                }}
-              >
-                <div style={{ display: 'flex', fontSize: '16px' }}>
-                  <span style={{ color: '#2f2b24', fontWeight: 600 }}>{chapter.author?.name || 'yazar tapılmadı'}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div
             style={{
               position: 'absolute',
+              top: 0,
               left: 0,
               right: 0,
               bottom: 0,
-              display: 'flex',
+              background:
+                'radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(160, 82, 45, 0.03) 0%, transparent 50%)',
+              borderRadius: 'inherit',
+              pointerEvents: 'none',
             }}
-          >
+          />
+
+          {/* Header Section */}
+          <div style={{ display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
             <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '100%',
-                padding: '16px 40px',
-                borderTop: '1px solid #d8d3c4',
-                backgroundColor: '#f3efe6',
-              }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '24px',
-                  color: '#4a463f',
-                }}
-              >
+              <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '20px',
-                    fontSize: '13px',
+                    width: '16px',
+                    height: '16px',
+                    background: '#8b4513',
+                    borderRadius: '50%',
+                    marginRight: '16px',
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: '32px',
+                    fontFamily: "Georgia, 'Times New Roman', serif",
+                    color: '#654321',
+                    letterSpacing: '3px',
+                    fontWeight: 'bold',
                   }}
                 >
-                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
-                      {chapter._count?.reads || 0}
-                    </span>
-                    <span style={{ display: 'flex' }}>oxuma</span>
-                  </span>
-                  <span style={{ display: 'flex', color: '#d0cabc' }}>•</span>
-                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
-                      {chapter._count?.favorites || 0}
-                    </span>
-                    <span style={{ display: 'flex' }}>favorit</span>
-                  </span>
-                  <span style={{ display: 'flex', color: '#d0cabc' }}>•</span>
-                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
-                      {chapter._count?.comments || 0}
-                    </span>
-                    <span style={{ display: 'flex' }}>şərh</span>
-                  </span>
-                </div>
+                  mahmud
+                </span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span
+                  style={{
+                    fontSize: '28px',
+                    color: '#3d2914',
+                    fontWeight: '600',
+                    fontFamily: "Georgia, 'Times New Roman', serif",
+                    background: 'rgba(254, 247, 205, 0.8)',
+                    padding: '8px 16px',
+                    borderRadius: '4px',
+                    border: '2px solid #8b4513',
+                  }}
+                >
+                  bölüm # {chapter.order}
+                </span>
+              </div>
+            </div>
 
-                <div style={{ display: 'flex' }}>
-                  {chapter.publishedAt && (
-                    <div style={{ display: 'flex', fontSize: '15px', color: '#6b6558', whiteSpace: 'nowrap' }}>
-                      {format(new Date(chapter.publishedAt), 'd MMMM yyyy, HH:mm', { locale: az })}
-                    </div>
-                  )}
-                </div>
+            {/* Main Title */}
+            <h1
+              style={{
+                fontSize: '72px',
+                fontFamily: "Georgia, 'Times New Roman', serif",
+                color: '#654321',
+                lineHeight: '1.1',
+                marginBottom: '24px',
+                fontWeight: 'bold',
+                letterSpacing: '-1px',
+              }}
+            >
+              {chapter.title}
+            </h1>
+
+            {/* Description */}
+            <p
+              style={{
+                fontSize: '28px',
+                color: '#8b4513',
+                lineHeight: '1.5',
+                maxWidth: '900px',
+                fontFamily: "Georgia, 'Times New Roman', serif",
+                fontStyle: 'italic',
+              }}
+            >
+              {chapter.synopsis}
+            </p>
+          </div>
+
+          {/* Footer Section */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'end',
+              justifyContent: 'space-between',
+              position: 'relative',
+              zIndex: 1,
+            }}
+          >
+            {/* Author */}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span
+                style={{
+                  fontSize: '28px',
+                  fontFamily: "Georgia, 'Times New Roman', serif",
+                  color: '#654321',
+                  fontWeight: 'bold',
+                }}
+              >
+                {chapter.author.name}
+              </span>
+            </div>
+
+            {/* Stats */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '48px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <span
+                  style={{
+                    fontSize: '36px',
+                    fontWeight: 'bold',
+                    color: '#654321',
+                    fontFamily: "Georgia, 'Times New Roman', serif",
+                  }}
+                >
+                  {chapter._count.reads.toLocaleString()}
+                </span>
+                <span
+                  style={{
+                    fontSize: '20px',
+                    color: '#a0522d',
+                    fontFamily: "Georgia, 'Times New Roman', serif",
+                    fontStyle: 'italic',
+                  }}
+                >
+                  oxuma
+                </span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <span
+                  style={{
+                    fontSize: '36px',
+                    fontWeight: 'bold',
+                    color: '#654321',
+                    fontFamily: "Georgia, 'Times New Roman', serif",
+                  }}
+                >
+                  {chapter._count.favorites.toLocaleString()}
+                </span>
+                <span
+                  style={{
+                    fontSize: '20px',
+                    color: '#a0522d',
+                    fontFamily: "Georgia, 'Times New Roman', serif",
+                    fontStyle: 'italic',
+                  }}
+                >
+                  favorit
+                </span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <span
+                  style={{
+                    fontSize: '36px',
+                    fontWeight: 'bold',
+                    color: '#654321',
+                    fontFamily: "Georgia, 'Times New Roman', serif",
+                  }}
+                >
+                  {chapter._count.comments.toLocaleString()}
+                </span>
+                <span
+                  style={{
+                    fontSize: '20px',
+                    color: '#a0522d',
+                    fontFamily: "Georgia, 'Times New Roman', serif",
+                    fontStyle: 'italic',
+                  }}
+                >
+                  şərh
+                </span>
               </div>
             </div>
           </div>

@@ -26,7 +26,7 @@ export function CharacterArticle({ character }: CharacterArticleProps) {
       <div className='prose prose-lg max-w-none'>
         <div
           className='chapter-content'
-          dangerouslySetInnerHTML={{ __html: character.wiki || '<p>No wiki available.</p>' }}
+          dangerouslySetInnerHTML={{ __html: character.wiki || '<p>personaj haqqında wiki kontenti yoxdur.</p>' }}
         />
       </div>
     </>

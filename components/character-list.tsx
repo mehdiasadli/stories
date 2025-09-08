@@ -49,7 +49,7 @@ export default async function CharacterList({ searchParams, dashboard }: Charact
 
       {characters.length === 0 && (
         <div className='max-w-2xl mx-auto'>
-          <p className='text-center text-gray-500'>No characters found</p>
+          <p className='text-center text-gray-500'>personaj tapılmadı</p>
         </div>
       )}
 

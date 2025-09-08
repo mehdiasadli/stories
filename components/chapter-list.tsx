@@ -65,7 +65,7 @@ export async function ChapterList({ searchParams, dashboard }: ChapterListProps)
 
       {chapters.length === 0 && (
         <div className='max-w-2xl mx-auto'>
-          <p className='text-center text-gray-500'>No chapters found</p>
+          <p className='text-center text-gray-500'>bölüm tapılmadı</p>
         </div>
       )}
 

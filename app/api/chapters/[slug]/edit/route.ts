@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { ChapterUpdateSchema } from '@/lib/schemas/chapter.schema';
 import { slugify } from '@/lib/utils';
 import { revalidatePath } from 'next/cache';
+import { sendNewChapterNotification } from '@/lib/mail';
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -48,12 +49,6 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       }
     }
 
-    // Handle status change and publishedAt
-    let publishedAt = existingChapter.publishedAt;
-    if (data.status === 'PUBLISHED' && existingChapter.status !== 'PUBLISHED') {
-      publishedAt = new Date();
-    }
-
     // Handle title change and slug update
     let newSlug = existingChapter.slug;
     if (data.title && data.title !== existingChapter.title) {
@@ -69,6 +64,23 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
           return NextResponse.json({ error: 'Chapter with this title already exists' }, { status: 400 });
         }
       }
+    }
+
+    // Handle status change and publishedAt
+    let publishedAt = existingChapter.publishedAt;
+    if (data.status === 'PUBLISHED' && existingChapter.status !== 'PUBLISHED') {
+      publishedAt = new Date();
+
+      const users =
+        (await prisma.user.findMany({
+          where: { admin: false },
+          select: { email: true, name: true },
+        })) ?? [];
+
+      await sendNewChapterNotification(users, {
+        title: data.title || existingChapter.title,
+        slug: newSlug,
+      });
     }
 
     // Update the chapter

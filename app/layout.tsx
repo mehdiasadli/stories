@@ -4,6 +4,7 @@ import './globals.css';
 import { SessionProvider } from 'next-auth/react';
 import { az } from 'date-fns/locale';
 import { Analytics } from '@vercel/analytics/react';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import { setDefaultOptions } from 'date-fns';
 
 setDefaultOptions({ locale: az });
@@ -91,7 +92,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <meta name='apple-mobile-web-app-title' content='mahmud' />
+      <head>
+        <meta name='apple-mobile-web-app-title' content='mahmud' />
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID!} />
+      </head>
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionProvider>{children}</SessionProvider>

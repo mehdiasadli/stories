@@ -756,10 +756,11 @@ export const getReadersOfChapter = cache(async (chapterSlug: string) => {
   });
 
   if (!chapter) {
-    return [];
+    return null;
   }
 
   const readers = await prisma.chapterRead.findMany({
+    orderBy: { createdAt: 'desc' },
     where: {
       chapter: {
         slug: chapter.slug,
@@ -794,10 +795,11 @@ export const getFavoritesOfChapter = cache(async (chapterSlug: string) => {
   });
 
   if (!chapter) {
-    return [];
+    return null;
   }
 
   const favorites = await prisma.favoriteChapter.findMany({
+    orderBy: { createdAt: 'desc' },
     where: {
       chapter: { slug: chapter.slug },
     },
@@ -830,10 +832,11 @@ export const getViewsOfCharacter = cache(async (characterSlug: string) => {
   });
 
   if (!character) {
-    return [];
+    return null;
   }
 
   const views = await prisma.characterView.findMany({
+    orderBy: { createdAt: 'desc' },
     where: {
       character: { slug: character.slug },
     },
@@ -866,10 +869,11 @@ export const getFavoritesOfCharacter = cache(async (characterSlug: string) => {
   });
 
   if (!character) {
-    return [];
+    return null;
   }
 
   const favorites = await prisma.favoriteCharacter.findMany({
+    orderBy: { createdAt: 'desc' },
     where: { character: { slug: character.slug } },
     select: {
       createdAt: true,

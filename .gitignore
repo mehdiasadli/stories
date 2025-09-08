@@ -45,5 +45,3 @@ next-env.d.ts
 /ignore
 seed.ts
 .txt
-
-/app/api/og/chapters/**/*.txt

@@ -83,7 +83,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                     height: '100%',
                     width: '100%',
                     backgroundImage: `url(${character.profileImageUrl})`,
-                    backgroundSize: 'cover',
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
                   }}
                 />

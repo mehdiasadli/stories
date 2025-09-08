@@ -35,6 +35,13 @@ export function CreateCharacterForm() {
 
       const imageFile = formData.get('profileImage') as File | null;
       if (imageFile && imageFile.size > 0) {
+        const MAX_SIZE = 3 * 1024 * 1024; // 3MB
+        if (imageFile.size > MAX_SIZE) {
+          setError('Image must be 3MB or smaller');
+          toast.error('Image must be 3MB or smaller');
+          setIsPending(false);
+          return;
+        }
         const uploadForm = new FormData();
         uploadForm.append('file', imageFile);
 
@@ -171,7 +178,7 @@ export function CreateCharacterForm() {
             disabled={isPending}
             name='profileImage'
           />
-          <p className='text-xs text-gray-500 mt-1'>Max ~10MB. JPEG/PNG/WebP recommended.</p>
+          <p className='text-xs text-gray-500 mt-1'>Max 3MB. JPEG/PNG/WebP recommended.</p>
         </div>
 
         {/* Date of Birth */}

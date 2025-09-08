@@ -56,6 +56,13 @@ export function EditCharacterForm({ character }: EditCharacterFormProps) {
 
       const imageFile = formData.get('profileImage') as File | null;
       if (imageFile && imageFile.size > 0) {
+        const MAX_SIZE = 3 * 1024 * 1024; // 3MB
+        if (imageFile.size > MAX_SIZE) {
+          setError('Image must be 3MB or smaller');
+          toast.error('Image must be 3MB or smaller');
+          setIsPending(false);
+          return;
+        }
         const uploadForm = new FormData();
         uploadForm.append('file', imageFile);
 

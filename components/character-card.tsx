@@ -21,12 +21,20 @@ export function CharacterCard({ character }: CharacterCardProps) {
   const appearedInChapters = character.chapters.filter(
     (chapter) => chapter.appearanceType === CharacterAppearanceType.APPEARANCE
   );
-
+  const mentionedInChapters = character.chapters.filter(
+    (chapter) => chapter.appearanceType === CharacterAppearanceType.MENTION
+  );
   const povInChapters = character.chapters.filter((chapter) => chapter.appearanceType === CharacterAppearanceType.POV);
 
   const info = `${character.dateOfBirth ? `${character.dateOfBirth}` : ''}${character.placeOfBirth ? `, ${character.placeOfBirth}` : ''}`;
   const appearanceStatus =
-    povInChapters.length > 0 ? 'POV' : appearedInChapters.length > 0 ? 'İştirak etdi' : 'Adı keçdi';
+    povInChapters.length > 0
+      ? 'POV'
+      : appearedInChapters.length > 0
+        ? 'İştirak etdi'
+        : mentionedInChapters.length > 0
+          ? 'Adı keçdi'
+          : '';
 
   return (
     <Link href={`/characters/${character.slug}`}>

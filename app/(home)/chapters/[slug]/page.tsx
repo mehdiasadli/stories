@@ -184,8 +184,19 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
 
           {/* Metadata */}
           <div className='pt-4 border-t border-gray-200 text-xs text-gray-500 space-y-1'>
-            <div>
-              {chapter.wordCount} söz • {chapter._count.reads} oxuma • {chapter._count.favorites} favorit
+            <div className='flex items-center gap-2 justify-center'>
+              <p>{chapter.wordCount} söz</p>
+              <p>•</p>
+              <Link href={`/chapters/${slug}/reads`} className='hover:text-gray-900 hover:underline transition-colors'>
+                <p>{chapter._count.reads} oxuma</p>
+              </Link>
+              <p>•</p>
+              <Link
+                href={`/chapters/${slug}/favorites`}
+                className='hover:text-gray-900 hover:underline transition-colors'
+              >
+                <p>{chapter._count.favorites} favorit</p>
+              </Link>
             </div>
             <div>
               <Link href={`/users/${chapter.author.slug}`} className='hover:text-gray-700 transition-colors'>

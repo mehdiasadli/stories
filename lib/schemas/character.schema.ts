@@ -1,5 +1,5 @@
 import z from 'zod';
-import { SLUG_REGEX } from '../regexes';
+import { DATE_REGEX, PLACE_REGEX, SLUG_REGEX } from '../regexes';
 import { CharacterGenderSchema } from './enums.schema';
 
 export const CharacterSchema = z.object({
@@ -15,10 +15,10 @@ export const CharacterSchema = z.object({
   aliases: z.array(z.string()).nullish(),
   wiki: z.string().nullish(),
   profileImageUrl: z.string().url().nullish(),
-  dateOfBirth: z.string().nullish(),
-  dateOfDeath: z.string().nullish(),
-  placeOfBirth: z.string().nullish(),
-  placeOfDeath: z.string().nullish(),
+  dateOfBirth: z.string().regex(DATE_REGEX).nullish(),
+  dateOfDeath: z.string().regex(DATE_REGEX).nullish(),
+  placeOfBirth: z.string().regex(PLACE_REGEX).nullish(),
+  placeOfDeath: z.string().regex(PLACE_REGEX).nullish(),
   birthDescription: z.string().max(256).nullish(),
   deathDescription: z.string().max(256).nullish(),
   gender: CharacterGenderSchema,

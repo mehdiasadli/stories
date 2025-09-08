@@ -19,7 +19,7 @@ export const getAllChapters = cache(async () => {
 export const getChaptersOfUser = cache(
   async (userId: string, resource: TChapterSearchOfUserResource, params: TChapterSearchOfUser) => {
     const { page } = params;
-    const CHAPTERS_PER_PAGE = 2;
+    const CHAPTERS_PER_PAGE = 6;
 
     const where: Prisma.ChapterWhereInput = {
       [resource]: { some: { userId } },

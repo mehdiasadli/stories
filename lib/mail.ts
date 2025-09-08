@@ -1,7 +1,6 @@
 import Mailjet from 'node-mailjet';
 import { emailVerificationTemplate } from './email-templates/verification.template';
 import { respond } from './response';
-import { Chapter } from '@prisma/client';
 import { newChapterNotificationTemplate } from './email-templates/new-chapter-notification.template';
 
 const mailjet = new Mailjet({

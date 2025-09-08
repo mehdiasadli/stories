@@ -1,5 +1,6 @@
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { generateFingerprint } from '@/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
@@ -50,7 +51,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     // For anonymous users: try to dedupe if fingerprint exists
     // Fingerprint is optional; if not present, we count the view
-    const fingerprintHeader = request.headers.get('x-fingerprint') || undefined;
+    const fingerprintHeader = request.headers.get('x-fingerprint') || generateFingerprint(request);
     if (!userId && fingerprintHeader) {
       const lastAnonView = await prisma.characterView.findFirst({
         where: {

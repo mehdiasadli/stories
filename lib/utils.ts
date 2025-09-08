@@ -1,5 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
+import { NextRequest } from 'next/server';
 import { twMerge } from 'tailwind-merge';
+import * as crypto from 'crypto';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -58,4 +60,14 @@ export function calculateReadingTime(wordCountOrText: number | string, wpm = 238
   const wordCount = typeof wordCountOrText === 'string' ? getWordCount(wordCountOrText, isHtml) : wordCountOrText;
   const minutes = Math.ceil(wordCount / wpm);
   return minutes;
+}
+
+export function generateFingerprint(req: NextRequest) {
+  // get ip, user-agent, and timestamp
+  const ip = req.headers.get('x-forwarded-for') || '';
+  const ua = req.headers.get('user-agent') || '';
+  const ts = Date.now();
+
+  // hash the ip, ua, and ts
+  return crypto.createHash('sha256').update(`${ip}-${ua}-${ts}`).digest('hex');
 }

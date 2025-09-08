@@ -31,6 +31,25 @@ export function CreateCharacterForm() {
           .filter((item) => item.length > 0);
       };
 
+      let uploadedProfileImageUrl: string | null = null;
+
+      const imageFile = formData.get('profileImage') as File | null;
+      if (imageFile && imageFile.size > 0) {
+        const uploadForm = new FormData();
+        uploadForm.append('file', imageFile);
+
+        const uploadRes = await fetch('/api/uploads/image', {
+          method: 'POST',
+          body: uploadForm,
+        });
+
+        const uploadJson = await uploadRes.json();
+        if (!uploadRes.ok || !uploadJson?.success) {
+          throw new Error(uploadJson?.error || 'Failed to upload image');
+        }
+        uploadedProfileImageUrl = uploadJson.secureUrl as string;
+      }
+
       const data: TCharacterCreate = {
         name: formData.get('name') as string,
         gender: formData.get('gender') as CharacterGender,
@@ -39,7 +58,7 @@ export function CreateCharacterForm() {
         description: (formData.get('description') as string) || null,
         titles: stringToArray(formData.get('titles') as string),
         aliases: stringToArray(formData.get('aliases') as string),
-        profileImageUrl: (formData.get('profileImageUrl') as string) || null,
+        profileImageUrl: uploadedProfileImageUrl,
         dateOfBirth: (formData.get('dateOfBirth') as string) || null,
         dateOfDeath: (formData.get('dateOfDeath') as string) || null,
         placeOfBirth: (formData.get('placeOfBirth') as string) || null,
@@ -141,18 +160,18 @@ export function CreateCharacterForm() {
           />
         </div>
 
-        {/* Profile Image URL - Placeholder */}
+        {/* Profile Image */}
         <div>
-          <label className='block text-sm font-medium text-gray-900 mb-2'>profile image URL</label>
-          <p className='text-sm text-gray-600 mb-2'>character profile image (optional - feature coming soon)</p>
+          <label className='block text-sm font-medium text-gray-900 mb-2'>profile image</label>
+          <p className='text-sm text-gray-600 mb-2'>upload a character profile image (optional)</p>
           <input
-            type='url'
-            placeholder='https://example.com/character-image.jpg'
-            className='w-full px-4 py-3 text-sm border border-gray-200 rounded-none focus:outline-none focus:border-gray-400 bg-gray-50'
-            disabled={true}
-            name='profileImageUrl'
+            type='file'
+            accept='image/*'
+            className='w-full px-4 py-3 text-sm border border-gray-200 rounded-none focus:outline-none focus:border-gray-400 bg-white'
+            disabled={isPending}
+            name='profileImage'
           />
-          <p className='text-xs text-gray-500 mt-1'>Image upload functionality will be implemented later</p>
+          <p className='text-xs text-gray-500 mt-1'>Max ~10MB. JPEG/PNG/WebP recommended.</p>
         </div>
 
         {/* Date of Birth */}

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { CharacterDeleteSchema } from '@/lib/schemas/character.schema';
+import { deleteImage, extractPublicIdFromUrl } from '@/lib/cloudinary';
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     // Find the character and check if it exists
     const existingCharacter = await prisma.character.findUnique({
       where: { slug },
-      select: { name: true },
+      select: { name: true, profileImageUrl: true },
     });
 
     if (!existingCharacter) {
@@ -49,6 +50,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     // Verify the character name matches
     if (existingCharacter.name !== data.name) {
       return NextResponse.json({ success: false, message: 'Character name does not match' }, { status: 400 });
+    }
+
+    // If there is a profile image, delete it from Cloudinary
+    if (existingCharacter.profileImageUrl) {
+      const publicId = extractPublicIdFromUrl(existingCharacter.profileImageUrl);
+      if (publicId) {
+        await deleteImage(publicId);
+      }
     }
 
     // Delete the character

@@ -5,6 +5,7 @@ import { CharacterUpdateSchema } from '@/lib/schemas/character.schema';
 import { slugify } from '@/lib/utils';
 import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
+import { deleteImage, extractPublicIdFromUrl } from '@/lib/cloudinary';
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -30,6 +31,13 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     let newSlug = slug;
     if (data.name && data.name !== existingCharacter.name) {
       newSlug = slugify(data.name);
+    }
+
+    if (data.profileImageUrl && data.profileImageUrl !== existingCharacter.profileImageUrl) {
+      if (existingCharacter.profileImageUrl) {
+        const publicId = extractPublicIdFromUrl(existingCharacter.profileImageUrl);
+        if (publicId) await deleteImage(publicId);
+      }
     }
 
     const character = await prisma.character.update({

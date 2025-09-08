@@ -4,13 +4,14 @@ import { CharacterCreateSchema } from '@/lib/schemas/character.schema';
 import { slugify } from '@/lib/utils';
 import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
+import { respond } from '@/lib/response';
 
 export async function POST(request: NextRequest) {
   try {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(respond.error('Unauthorized'), { status: 401 });
     }
 
     const body = await request.json();
@@ -22,7 +23,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (existingCharacter) {
-      return NextResponse.json({ error: 'Character with this name already exists' }, { status: 400 });
+      return NextResponse.json(respond.error('Character with this name already exists'), { status: 400 });
     }
 
     const character = await prisma.character.create({
@@ -40,13 +41,9 @@ export async function POST(request: NextRequest) {
     revalidatePath(`/dashboard/characters`);
     revalidatePath('/');
 
-    return NextResponse.json({
-      success: true,
-      message: 'Character created successfully',
-      data: character,
-    });
+    return NextResponse.json(respond.success(character, 'Character created successfully'));
   } catch (e) {
     console.error('Error creating character:', e);
-    return NextResponse.json({ error: 'Failed to create character' }, { status: 500 });
+    return NextResponse.json(respond.error('Failed to create character'), { status: 500 });
   }
 }

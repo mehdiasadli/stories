@@ -2,8 +2,9 @@
 
 import Editor from '@/components/tiptap/editor';
 import { TChapter } from '@/lib/schemas/chapter.schema';
+import { getWordCount } from '@/lib/utils';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 
 interface DashboardChapterEditContentFormProps {
@@ -13,6 +14,10 @@ interface DashboardChapterEditContentFormProps {
 export default function DashboardChapterEditContentForm({ chapter }: DashboardChapterEditContentFormProps) {
   const [content, setContent] = useState(chapter.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const getContentWordCount = useCallback(() => {
+    return getWordCount(content, true);
+  }, [content]);
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -54,7 +59,7 @@ export default function DashboardChapterEditContentForm({ chapter }: DashboardCh
         </div>
 
         <div className='flex items-center gap-4'>
-          <div className='text-sm text-gray-500'>{chapter.wordCount.toLocaleString()} words</div>
+          <div className='text-sm text-gray-500'>{getContentWordCount().toLocaleString()} words</div>
           <button
             onClick={handleSubmit}
             disabled={isSubmitting}

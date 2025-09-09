@@ -6,6 +6,7 @@ import { slugify } from '@/lib/utils';
 import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 import { deleteImage, extractPublicIdFromUrl } from '@/lib/cloudinary';
+import { createMultipleNotifications } from '@/lib/fetchers';
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -49,6 +50,24 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         aliases: data.aliases || [],
       },
     });
+
+    if (data.published && !existingCharacter.published) {
+      const users = await prisma.user.findMany({
+        where: { admin: false },
+        select: { id: true },
+      });
+
+      await createMultipleNotifications(
+        users.map((u) => u.id),
+        {
+          title: `${character.name} personajı paylaşıldı`,
+          content: 'Yeni personaj paylaşıldı',
+          type: 'NEW_CHARACTER_PUBLISHED',
+          link: `/characters/${character.slug}`,
+          linkText: 'Personaja keç',
+        }
+      );
+    }
 
     revalidatePath('/characters');
     revalidatePath(`/characters/${character.slug}`);

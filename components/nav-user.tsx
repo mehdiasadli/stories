@@ -34,14 +34,6 @@ export function NavUser() {
   return (
     <div className='relative'>
       <div className='flex items-center gap-7'>
-        {user.admin && (
-          <Link
-            href='/dashboard/chapters'
-            className='flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors'
-          >
-            dashboard
-          </Link>
-        )}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className='flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors'
@@ -70,6 +62,15 @@ export function NavUser() {
               >
                 profil
               </Link>
+              {user.admin && (
+                <Link
+                  href='/dashboard/chapters'
+                  className='block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors'
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  dashboard
+                </Link>
+              )}
               {/* <Link
                 href='/settings'
                 className='block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors'

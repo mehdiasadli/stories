@@ -1,4 +1,5 @@
 import { auth } from '@/lib/auth';
+import { createNotification, getAuthorId } from '@/lib/fetchers';
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -13,10 +14,25 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const { slug } = await params;
     const userId = session.user.id;
 
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { name: true },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
     const character = await prisma.character.findUnique({
       where: { slug, published: true },
-      select: { id: true },
+      select: { id: true, name: true },
     });
+
+    const authorId = await getAuthorId();
+
+    if (!authorId) {
+      return NextResponse.json({ error: 'Author not found' }, { status: 404 });
+    }
 
     if (!character) {
       return NextResponse.json({ error: 'Character not found' }, { status: 404 });
@@ -37,6 +53,15 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     await prisma.favoriteCharacter.create({
       data: { characterId: character.id, userId },
+    });
+
+    await createNotification({
+      userId: authorId,
+      title: `${user.name} ${character.name} personajını favoritlərə əlavə etdi`,
+      content: 'Yeni personaj favoritlərə əlavə edildi',
+      type: 'NEW_CHARACTER_FAVORITE',
+      link: `/characters/${slug}`,
+      linkText: 'Personaja keç',
     });
 
     return NextResponse.json({ success: true, message: 'Character favorited successfully' });

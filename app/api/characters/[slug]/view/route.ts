@@ -1,4 +1,5 @@
 import { auth } from '@/lib/auth';
+import { createNotification, getAuthorId } from '@/lib/fetchers';
 import { prisma } from '@/lib/prisma';
 import { generateFingerprint } from '@/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
@@ -7,6 +8,17 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   try {
     const session = await auth();
     const userId = session?.user?.id;
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { name: true },
+    });
+
+    const authorId = await getAuthorId();
+
+    if (!authorId) {
+      return NextResponse.json({ error: 'Author not found' }, { status: 404 });
+    }
 
     const { slug } = await params;
 
@@ -24,7 +36,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     const character = await prisma.character.findUnique({
       where: { slug, published: true },
-      select: { id: true },
+      select: { id: true, name: true },
     });
 
     if (!character) {
@@ -73,6 +85,17 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         fingerprint: !userId ? request.headers.get('x-fingerprint') || null : null,
       },
     });
+
+    if (user) {
+      await createNotification({
+        userId: authorId,
+        title: `${user.name} ${character.name} personajına baxdı`,
+        content: 'Yeni personaja baxıldı',
+        type: 'NEW_CHARACTER_VIEW',
+        link: `/characters/${slug}`,
+        linkText: 'Personaja keç',
+      });
+    }
 
     return NextResponse.json({ success: true, message: 'Character viewed successfully' });
   } catch (error) {

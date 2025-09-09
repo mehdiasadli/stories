@@ -1,5 +1,6 @@
 import Logo from '@/components/logo';
 import { NavUser } from '@/components/nav-user';
+import { Notifications } from '@/components/notifications';
 import Link from 'next/link';
 
 export default function HomeLayout({ children }: { children: React.ReactNode }) {
@@ -26,6 +27,7 @@ export default function HomeLayout({ children }: { children: React.ReactNode }) 
           </div>
 
           <div className='flex items-center gap-4'>
+            <Notifications />
             <NavUser />
           </div>
         </div>

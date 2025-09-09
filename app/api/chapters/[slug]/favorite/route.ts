@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { createNotification } from '@/lib/fetchers';
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -13,10 +14,19 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const { slug } = await params;
     const userId = session.user.id;
 
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { name: true },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
     // Find the chapter
     const chapter = await prisma.chapter.findUnique({
       where: { slug, status: 'PUBLISHED' },
-      select: { id: true },
+      select: { id: true, authorId: true, title: true },
     });
 
     if (!chapter) {
@@ -67,6 +77,15 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         chapterId: chapter.id,
         userId: userId,
       },
+    });
+
+    await createNotification({
+      userId: chapter.authorId,
+      title: `${user.name} ${chapter.title} bölümüün favoritlərə əlavə etdi`,
+      content: 'Yeni bölüm favoritlərə əlavə edildi',
+      type: 'NEW_CHAPTER_FAVORITE',
+      link: `/chapters/${slug}`,
+      linkText: 'Bölümə keç',
     });
 
     return NextResponse.json({

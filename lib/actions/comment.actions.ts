@@ -7,6 +7,8 @@ import { prisma } from '../prisma';
 import { respond, TResponse } from '../response';
 import { CommentCreateSchema, CommentDeleteSchema, CommentUpdateSchema, TComment } from '../schemas/comment.schema';
 import { slugify } from '../utils';
+import { NotificationType } from '@prisma/client';
+import { createNotification } from '../fetchers';
 
 export async function createComment(previousState: any, formData: FormData): Promise<TResponse<TComment>> {
   try {
@@ -45,7 +47,41 @@ export async function createComment(previousState: any, formData: FormData): Pro
         parentId: rest.parentId || undefined,
         chapterId: chapter.id,
       },
+      include: {
+        parent: {
+          select: {
+            userId: true,
+          },
+        },
+        chapter: {
+          select: {
+            authorId: true,
+          },
+        },
+      },
     });
+
+    const createCommentNotification = async (userId: string, title: string, type: NotificationType) => {
+      await createNotification({
+        userId,
+        title,
+        content: comment.content,
+        type,
+        link: `/chapters/${chapterSlug}/discussion`,
+        linkText: 'Şərhə keç',
+      });
+    };
+
+    // create notification
+    if (!comment.parent) {
+      // if the comment is not a reply, notify author
+      await createCommentNotification(comment.chapter.authorId, 'Yeni Şərh', NotificationType.NEW_CHAPTER_COMMENT);
+    } else {
+      // if the comment is a reply, notify parent comment author
+      if (comment.parent.userId !== session.user.id) {
+        await createCommentNotification(comment.parent.userId, 'Yeni Cavab', NotificationType.NEW_COMMENT_REPLY);
+      }
+    }
 
     revalidatePath(`/chapters/${chapterSlug}/discussion`);
     revalidatePath(`/chapters/${chapterSlug}`);

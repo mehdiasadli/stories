@@ -4,6 +4,7 @@ import { TCharacterSearch } from '@/lib/schemas/character.schema';
 import { TChapterSearch, TChapterSearchOfUser, TChapterSearchOfUserResource } from '@/lib/schemas/chapter.schema';
 import { Prisma } from '@prisma/client';
 import { cache } from 'react';
+import { TNotificationCreate } from './schemas/notification.schema';
 
 export const getAllChapters = cache(async (onlyPublished = true) => {
   return await prisma.chapter.findMany({
@@ -956,3 +957,17 @@ export const getNotificationsCount = cache(async (userId: string, readType: 'rea
     where: { userId, ...(readType === 'read' && { read: true }), ...(readType === 'unread' && { read: false }) },
   });
 });
+
+export const createNotification = cache(async (data: TNotificationCreate) => {
+  return await prisma.notification.create({
+    data,
+  });
+});
+
+export const createMultipleNotifications = cache(
+  async (userIds: string[], data: Omit<TNotificationCreate, 'userId'>) => {
+    return await prisma.notification.createMany({
+      data: userIds.map((userId) => ({ ...data, userId })),
+    });
+  }
+);

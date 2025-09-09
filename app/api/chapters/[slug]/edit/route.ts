@@ -4,7 +4,8 @@ import { prisma } from '@/lib/prisma';
 import { ChapterUpdateSchema } from '@/lib/schemas/chapter.schema';
 import { slugify } from '@/lib/utils';
 import { revalidatePath } from 'next/cache';
-import { sendNewChapterNotification } from '@/lib/mail';
+import { sendNewChapterNotificationEmail } from '@/lib/mail';
+import { createMultipleNotifications } from '@/lib/fetchers';
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -74,13 +75,24 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       const users =
         (await prisma.user.findMany({
           where: { admin: false },
-          select: { email: true, name: true },
+          select: { email: true, name: true, id: true },
         })) ?? [];
 
-      await sendNewChapterNotification(users, {
+      await sendNewChapterNotificationEmail(users, {
         title: data.title || existingChapter.title,
         slug: newSlug,
       });
+
+      await createMultipleNotifications(
+        users.map((u) => u.id),
+        {
+          title: data.title || existingChapter.title,
+          content: data.synopsis || existingChapter.synopsis || 'yeni bölüm ilə tanış olun',
+          type: 'NEW_CHAPTER_PUBLISHED',
+          link: `/chapters/${newSlug}`,
+          linkText: 'Bölümə keç',
+        }
+      );
     }
 
     // Update the chapter

@@ -33,7 +33,7 @@ export async function sendEmailVerification(email: string, token: string, expire
   }
 }
 
-export async function sendNewChapterNotification(
+export async function sendNewChapterNotificationEmail(
   users: { email: string; name: string }[],
   chapter: {
     title: string;

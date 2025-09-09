@@ -17,7 +17,7 @@ export default async function UserCommentsPage({ params, searchParams }: UserCom
 
   const profileUser = await getProfileUser(slug);
 
-  if (!profileUser || !profileUser.isVerified) {
+  if (!profileUser) {
     notFound();
   }
 

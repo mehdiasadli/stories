@@ -42,6 +42,7 @@ import {
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
+import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
 
 interface TUser extends Omit<User, 'password' | 'updatedAt' | 'id'> {
   _count: {
@@ -63,6 +64,20 @@ function ActionsCell({ row }: { row: IRow }) {
     toast.message(`User slug successfully copied: ${row.original.slug}`);
   };
 
+  const handleVerifyUser = async () => {
+    const response = await fetch(`/api/auth/admin-verify`, {
+      method: 'POST',
+      body: JSON.stringify({ slug: row.original.slug }),
+    });
+
+    if (response.ok) {
+      toast.message('User verified successfully');
+      window.location.reload();
+    } else {
+      toast.error('Failed to verify user');
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -76,6 +91,12 @@ function ActionsCell({ row }: { row: IRow }) {
         <DropdownMenuItem asChild>
           <Link href={`/users/${row.original.slug}`}>Go to User</Link>
         </DropdownMenuItem>
+        {row.original.hasAdminVerified ? null : (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleVerifyUser}>Verify User</DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -141,12 +162,12 @@ export function DashboardUsersTable({ users }: { users: TUser[] }) {
         enableResizing: true,
       },
       {
-        accessorKey: 'isVerified',
-        id: 'isVerified',
-        header: ({ column }) => <DataGridColumnHeader title='Status' visibility={true} column={column} />,
+        accessorKey: 'isEmailVerified',
+        id: 'isEmailVerified',
+        header: ({ column }) => <DataGridColumnHeader title='Verified Email' visibility={true} column={column} />,
         cell: ({ row }) => (
           <div className='font-medium text-foreground'>
-            {row.original.isVerified ? (
+            {row.original.isEmailVerified ? (
               <Badge variant='success' appearance='outline'>
                 Verified
               </Badge>
@@ -157,7 +178,29 @@ export function DashboardUsersTable({ users }: { users: TUser[] }) {
             )}
           </div>
         ),
-        size: 60,
+        size: 70,
+        enableSorting: true,
+        enableHiding: true,
+        enableResizing: true,
+      },
+      {
+        accessorKey: 'hasAdminVerified',
+        id: 'hasAdminVerified',
+        header: ({ column }) => <DataGridColumnHeader title='Verified Admin' visibility={true} column={column} />,
+        cell: ({ row }) => (
+          <div className='font-medium text-foreground'>
+            {row.original.hasAdminVerified ? (
+              <Badge variant='success' appearance='outline'>
+                Verified
+              </Badge>
+            ) : (
+              <Badge variant='warning' appearance='outline'>
+                Unverified
+              </Badge>
+            )}
+          </div>
+        ),
+        size: 70,
         enableSorting: true,
         enableHiding: true,
         enableResizing: true,

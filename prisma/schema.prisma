@@ -39,12 +39,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  email      String  @unique
-  slug       String  @unique
-  name       String
-  password   String
-  admin      Boolean @default(false) // Admin can write,edit and delete chapters and characters
-  isVerified Boolean @default(false)
+  email            String  @unique
+  slug             String  @unique
+  name             String
+  password         String
+  admin            Boolean @default(false) // Admin can write,edit and delete chapters and characters
+  isEmailVerified  Boolean @default(false) // user must verify email
+  hasAdminVerified Boolean @default(false) // admin must verify user manually
 
   verificationTokens EmailVerificationToken[]
   favoriteChapters   FavoriteChapter[]

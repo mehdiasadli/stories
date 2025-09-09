@@ -32,7 +32,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return null;
           }
 
-          if (user.isVerified === false) {
+          if (user.isEmailVerified === false || user.hasAdminVerified === false) {
             return null;
           }
 

@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import { Bell, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 export function Notifications() {
+  const session = useSession();
   const [notificationsCount, setNotificationsCount] = useState<number>(0);
   const [isLoadingCount, setIsLoadingCount] = useState<boolean>(false);
   const router = useRouter();
@@ -32,6 +34,10 @@ export function Notifications() {
     window.addEventListener('notifications:refresh', handler);
     return () => window.removeEventListener('notifications:refresh', handler);
   }, []);
+
+  if (session.status === 'loading' || !session.data?.user?.id) {
+    return null;
+  }
 
   return (
     <div

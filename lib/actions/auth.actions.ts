@@ -100,7 +100,7 @@ export async function resendVerification(previousState: any, formData: FormData)
       return respond.error('istifadəçi tapılmadı');
     }
 
-    if (user.isVerified) {
+    if (user.isEmailVerified) {
       return respond.error('istifadəçi artıq təsdiq edilib. daxil ol səhifəsinə keç.');
     }
 
@@ -153,14 +153,14 @@ export async function verifyEmail(
   try {
     const emailVerificationToken = await prisma.emailVerificationToken.findUnique({
       where: { token },
-      include: { user: { select: { id: true, name: true, isVerified: true } } },
+      include: { user: { select: { id: true, name: true, isEmailVerified: true } } },
     });
 
     if (!emailVerificationToken || !emailVerificationToken.user) {
       return { ...respond.error('düzgün olmayan təsdiq tokeni'), status: 'invalid' };
     }
 
-    if (emailVerificationToken.user.isVerified) {
+    if (emailVerificationToken.user.isEmailVerified) {
       await prisma.emailVerificationToken.delete({
         where: { id: emailVerificationToken.id },
       });
@@ -179,7 +179,7 @@ export async function verifyEmail(
     return await prisma.$transaction(async (tx) => {
       const user = await tx.user.update({
         where: { id: emailVerificationToken.user.id },
-        data: { isVerified: true },
+        data: { isEmailVerified: true },
         select: { id: true, name: true, slug: true, email: true, admin: true },
       });
 

@@ -17,7 +17,7 @@ export default async function UserReadsPage({ params, searchParams }: UserReadsP
 
   const profileUser = await getProfileUser(slug);
 
-  if (!profileUser || !profileUser.isVerified) {
+  if (!profileUser) {
     notFound();
   }
 

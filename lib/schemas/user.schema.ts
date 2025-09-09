@@ -10,7 +10,8 @@ export const UserSchema = z.object({
   name: z.string().min(2).max(50),
   password: z.string().min(8).max(50),
   admin: z.boolean(),
-  isVerified: z.boolean(),
+  isEmailVerified: z.boolean(),
+  hasAdminVerified: z.boolean(),
 });
 
 export const UserUpdateSchema = UserSchema.omit({
@@ -21,7 +22,8 @@ export const UserUpdateSchema = UserSchema.omit({
   email: true,
   slug: true,
   password: true,
-  isVerified: true,
+  isEmailVerified: true,
+  hasAdminVerified: true,
   name: true,
 }).partial();
 
@@ -31,10 +33,14 @@ export const UserCreateSchema = UserSchema.omit({
   updatedAt: true,
   slug: true,
   admin: true,
-  isVerified: true,
+  isEmailVerified: true,
+  hasAdminVerified: true,
 });
 
 export type TUser = z.infer<typeof UserSchema>;
-export type TPublicUser = Omit<TUser, 'password' | 'isVerified' | 'updatedAt' | 'createdAt' | 'id'>;
+export type TPublicUser = Omit<
+  TUser,
+  'password' | 'isEmailVerified' | 'hasAdminVerified' | 'updatedAt' | 'createdAt' | 'id'
+>;
 export type TUserUpdate = z.infer<typeof UserUpdateSchema>;
 export type TUserCreate = z.infer<typeof UserCreateSchema>;

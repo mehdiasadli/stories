@@ -17,7 +17,7 @@ export default async function UserFavoritesPage({ params, searchParams }: UserFa
 
   const profileUser = await getProfileUser(slug);
 
-  if (!profileUser || !profileUser.isVerified) {
+  if (!profileUser) {
     notFound();
   }
 

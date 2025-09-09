@@ -13,7 +13,7 @@ export default async function UserLayout({ children, params }: UserLayoutProps) 
 
   const profileUser = await getProfileUser(slug);
 
-  if (!profileUser || !profileUser.isVerified) {
+  if (!profileUser || !profileUser.isEmailVerified || !profileUser.hasAdminVerified) {
     notFound();
   }
 

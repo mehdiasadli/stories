@@ -466,7 +466,8 @@ export const getUsers = cache(async () => {
       name: true,
       email: true,
       admin: true,
-      isVerified: true,
+      isEmailVerified: true,
+      hasAdminVerified: true,
       createdAt: true,
       _count: {
         select: {

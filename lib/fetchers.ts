@@ -5,13 +5,22 @@ import { TChapterSearch, TChapterSearchOfUser, TChapterSearchOfUserResource } fr
 import { Prisma } from '@prisma/client';
 import { cache } from 'react';
 
-export const getAllChapters = cache(async () => {
+export const getAllChapters = cache(async (onlyPublished = true) => {
   return await prisma.chapter.findMany({
     where: {
-      status: 'PUBLISHED',
+      status: onlyPublished ? 'PUBLISHED' : undefined,
     },
     orderBy: {
       publishedAt: 'desc',
+    },
+    include: {
+      _count: {
+        select: {
+          reads: true,
+          favorites: true,
+          comments: true,
+        },
+      },
     },
   });
 });
@@ -448,13 +457,55 @@ export const getProfileUser = cache(async (slug: string) => {
   });
 });
 
-export const getAllCharacters = cache(async () => {
+export const getUsers = cache(async () => {
+  return await prisma.user.findMany({
+    select: {
+      slug: true,
+      name: true,
+      email: true,
+      admin: true,
+      isVerified: true,
+      createdAt: true,
+      _count: {
+        select: {
+          comments: true,
+          characterViews: true,
+          favoriteChapters: true,
+          favoriteCharacters: true,
+          reads: true,
+        },
+      },
+    },
+  });
+});
+
+export const getAllCharacters = cache(async (type: 'published' | 'unpublished' | 'all' = 'all') => {
   return await prisma.character.findMany({
     where: {
-      published: true,
+      published: type === 'published' ? true : type === 'unpublished' ? false : undefined,
     },
     orderBy: {
       name: 'asc',
+    },
+    include: {
+      chapters: {
+        select: {
+          appearanceType: true,
+          chapter: {
+            select: {
+              title: true,
+              slug: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          chapters: true,
+          favorites: true,
+          views: true,
+        },
+      },
     },
   });
 });

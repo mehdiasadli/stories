@@ -1,10 +1,8 @@
-import { TChapterSearch } from '@/lib/schemas/chapter.schema';
-import { ChapterList } from '@/components/chapter-list';
+import { getAllChapters } from '@/lib/fetchers';
+import { DashboardChaptersTable } from './table';
 
-interface DashboardChaptersPageProps {
-  searchParams: Promise<Partial<TChapterSearch>>;
-}
+export default async function DashboardChaptersPage() {
+  const chapters = await getAllChapters(false);
 
-export default async function DashboardChaptersPage({ searchParams }: DashboardChaptersPageProps) {
-  return <ChapterList searchParams={searchParams} dashboard />;
+  return <DashboardChaptersTable chapters={chapters} />;
 }

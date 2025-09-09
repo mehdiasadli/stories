@@ -1,14 +1,8 @@
-import CharacterList from '@/components/character-list';
-import { TCharacterSearch } from '@/lib/schemas/character.schema';
+import { getAllCharacters } from '@/lib/fetchers';
+import { DashboardCharactersTable } from './table';
 
-interface DashboardCharactersPageProps {
-  searchParams: Promise<Partial<TCharacterSearch>>;
-}
+export default async function DashboardCharactersPage() {
+  const characters = await getAllCharacters('all');
 
-export default function DashboardCharactersPage({ searchParams }: DashboardCharactersPageProps) {
-  return (
-    <div>
-      <CharacterList searchParams={searchParams} dashboard />
-    </div>
-  );
+  return <DashboardCharactersTable characters={characters} />;
 }

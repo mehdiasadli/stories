@@ -11,7 +11,7 @@ export const revalidate = 300; // 5 minutes
 export const dynamicParams = true; // Allow dynamic params for newly published characters
 
 export async function generateStaticParams() {
-  const characters = await getAllCharacters();
+  const characters = await getAllCharacters('published');
 
   return characters.map((character) => ({
     slug: character.slug,

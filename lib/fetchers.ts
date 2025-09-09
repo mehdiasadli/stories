@@ -943,3 +943,16 @@ export const getFavoritesOfCharacter = cache(async (characterSlug: string) => {
     favorites,
   };
 });
+
+export const getNotifications = cache(async (userId: string, readType: 'read' | 'unread' | 'all' = 'all') => {
+  return await prisma.notification.findMany({
+    where: { userId, ...(readType === 'read' && { read: true }), ...(readType === 'unread' && { read: false }) },
+    orderBy: { createdAt: 'desc' },
+  });
+});
+
+export const getNotificationsCount = cache(async (userId: string, readType: 'read' | 'unread' | 'all' = 'all') => {
+  return await prisma.notification.count({
+    where: { userId, ...(readType === 'read' && { read: true }), ...(readType === 'unread' && { read: false }) },
+  });
+});

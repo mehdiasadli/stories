@@ -54,6 +54,8 @@ export function NotificationsList({ initialNotifications }: NotificationsListPro
     }
   };
 
+  const joinedUnreadIds = useMemo(() => unreadIds.join(','), [unreadIds]);
+
   useEffect(() => {
     if (!containerRef.current) return;
     const observer = new IntersectionObserver(
@@ -75,7 +77,8 @@ export function NotificationsList({ initialNotifications }: NotificationsListPro
     const items = containerRef.current.querySelectorAll('[data-notification-item="true"]');
     items.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [unreadIds.join(',')]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [joinedUnreadIds]);
 
   const isExternal = (url?: string | null) => !!url && /^(http|https):\/\//.test(url);
 

@@ -23,7 +23,7 @@ export default async function NotificationsPage() {
         {notifications.length === 0 ? (
           <div className='text-sm text-gray-600 border border-gray-200 bg-white p-6'>Hal-hazırda bildiriş yoxdur.</div>
         ) : (
-          <NotificationsList initialNotifications={notifications as any} />
+          <NotificationsList initialNotifications={notifications} />
         )}
       </div>
     </div>

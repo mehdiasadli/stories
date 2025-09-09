@@ -42,6 +42,13 @@ export default auth(async (req: NextRequest) => {
         cache: 'no-store',
       });
     }
+
+    // check only authenticated users can see /chapters/[slug] and /characters/[slug], but crawlers can see them
+    if (pathname.startsWith('/chapters/') || pathname.startsWith('/characters/')) {
+      if (!session?.user && !isBot) {
+        return NextResponse.redirect(new URL('/', req.nextUrl));
+      }
+    }
   } catch (err) {
     // Silently ignore errors to avoid interrupting the user request
     console.error('middleware view log error', err);

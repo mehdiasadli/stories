@@ -83,7 +83,7 @@ export function CreateChapterForm() {
     <div>
       <form onSubmit={handleSubmit} className='space-y-6'>
         <div>
-          <label className='block text-sm font-medium text-gray-900 mb-2'>chapter Title</label>
+          <label className='block text-sm font-medium text-gray-900 mb-2'>chapter title</label>
           <input
             type='text'
             placeholder='enter chapter title...'
@@ -96,7 +96,7 @@ export function CreateChapterForm() {
 
         {/* Order */}
         <div>
-          <label className='block text-sm font-medium text-gray-900 mb-2'>chapter Order</label>
+          <label className='block text-sm font-medium text-gray-900 mb-2'>chapter order</label>
           <p className='text-sm text-gray-600 mb-2'>position of this chapter in the book</p>
           <input
             type='number'
@@ -125,7 +125,7 @@ export function CreateChapterForm() {
 
         {/* Synopsis */}
         <div>
-          <label className='block text-sm font-medium text-gray-900 mb-2'>chapter Synopsis</label>
+          <label className='block text-sm font-medium text-gray-900 mb-2'>chapter synopsis</label>
           <p className='text-sm text-gray-600 mb-2'>brief description of this chapter (optional)</p>
           <textarea
             placeholder='brief description of this chapter...'
@@ -138,7 +138,7 @@ export function CreateChapterForm() {
 
         {/* Cover Image URL - Placeholder */}
         <div>
-          <label className='block text-sm font-medium text-gray-900 mb-2'>cover Image URL</label>
+          <label className='block text-sm font-medium text-gray-900 mb-2'>cover image url</label>
           <p className='text-sm text-gray-600 mb-2'>chapter cover image (optional - feature coming soon)</p>
           <input
             type='url'

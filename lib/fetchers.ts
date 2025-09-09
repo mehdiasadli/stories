@@ -331,10 +331,11 @@ export const getChapters = cache(async (params: TChapterSearch, dashboard?: bool
   };
 });
 
-export const getChapter = cache(async (chapterSlug: string) => {
+export const getChapter = cache(async (chapterSlug: string, onlyPublished: boolean = false) => {
   return await prisma.chapter.findUnique({
     where: {
       slug: chapterSlug,
+      ...(onlyPublished && { status: 'PUBLISHED' }),
     },
     include: {
       _count: {

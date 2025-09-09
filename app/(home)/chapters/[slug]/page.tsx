@@ -82,7 +82,7 @@ interface ChapterPageProps {
 export default async function ChapterPage({ params }: ChapterPageProps) {
   const { slug } = await params;
 
-  const chapter = await getChapter(slug);
+  const chapter = await getChapter(slug, true);
 
   if (!chapter) {
     notFound();

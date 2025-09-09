@@ -53,6 +53,7 @@ model User {
   chapters           Chapter[]
   characterViews     CharacterView[]
   favoriteCharacters FavoriteCharacter[]
+  notifications      Notification[]
 
   @@map("users")
 }
@@ -239,4 +240,38 @@ model Comment {
   @@index([userId])
   @@index([chapterId])
   @@map("comments")
+}
+
+model Notification {
+  id             String           @id @default(uuid())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  title          String
+  content        String           @db.Text
+  read           Boolean          @default(false)
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  link           String?
+  linkText       String?
+  acceptLink     String?
+  acceptLinkText String?
+  rejectLink     String?
+  rejectLinkText String?
+  type           NotificationType
+
+  @@map("notifications")
+}
+
+enum NotificationType {
+  // chapters
+  NEW_CHAPTER_PUBLISHED
+  NEW_CHAPTER_COMMENT
+  NEW_CHAPTER_READ
+  NEW_CHAPTER_FAVORITE
+  // characters
+  NEW_CHARACTER_PUBLISHED
+  NEW_CHARACTER_FAVORITE
+  NEW_CHARACTER_VIEW
+  // comments
+  NEW_COMMENT_REPLY
 }

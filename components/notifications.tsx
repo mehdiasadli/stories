@@ -37,7 +37,7 @@ export function Notifications() {
     <div
       className='relative'
       onClick={() => {
-        if (!isLoadingCount && notificationsCount > 0) {
+        if (!isLoadingCount) {
           router.push('/notifications');
         }
       }}

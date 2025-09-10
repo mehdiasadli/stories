@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from './lib/auth';
+import { checkIfBot } from './lib/actions/bots';
 
 export default auth(async (req: NextRequest) => {
   const session = await auth();
@@ -24,9 +25,7 @@ export default auth(async (req: NextRequest) => {
 
     // Basic bot detection
     const userAgent = req.headers.get('user-agent') || '';
-    const botRegex =
-      /(bot|crawler|spider|crawling|facebookexternalhit|slackbot|twitterbot|bingbot|googlebot|duckduckbot|baiduspider|yandex|ahrefs|semrush|MJ12bot|dotbot|petalbot)/i;
-    const isBot = botRegex.test(userAgent);
+    const isBot = checkIfBot(userAgent);
 
     if (isGet && characterMatch && !isPrefetch && isDocument && !isBot) {
       const slug = characterMatch[1];
@@ -43,8 +42,7 @@ export default auth(async (req: NextRequest) => {
       });
     }
 
-    // check only authenticated users can see /chapters/[slug] and /characters/[slug], but crawlers can see them
-    if (pathname.startsWith('/chapters/') || pathname.startsWith('/characters/')) {
+    if (!pathname.startsWith('/api/') && (pathname.startsWith('/chapters/') || pathname.startsWith('/characters/'))) {
       if (!session?.user && !isBot) {
         return NextResponse.redirect(new URL('/', req.nextUrl));
       }

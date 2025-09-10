@@ -108,6 +108,16 @@ export function DashboardUsersTable({ users }: { users: TUser[] }) {
     pageSize: 10,
   });
 
+  console.log(
+    'USERS:',
+    users.map((u) => ({
+      slug: u.slug,
+      name: u.name,
+      hasAdminVerified: u.hasAdminVerified,
+      isEmailVerified: u.isEmailVerified,
+    }))
+  );
+
   const [sorting, setSorting] = useState<SortingState>([{ id: 'name', desc: false }]);
   const [searchQuery, setSearchQuery] = useState('');
 

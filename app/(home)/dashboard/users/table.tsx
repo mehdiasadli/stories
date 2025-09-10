@@ -80,20 +80,6 @@ function ActionsCell({ row }: { row: IRow }) {
     }
   };
 
-  const handleDeleteUser = async () => {
-    const response = await fetch(`/api/users/delete`, {
-      method: 'DELETE',
-      body: JSON.stringify({ slug: row.original.slug }),
-    });
-
-    if (response.ok) {
-      toast.message('User deleted successfully');
-      window.location.reload();
-    } else {
-      toast.error('Failed to delete user');
-    }
-  };
-
   const openDeleteModal = () => {
     setIsDeleteModalOpen(true);
   };

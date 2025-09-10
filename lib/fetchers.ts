@@ -972,3 +972,97 @@ export const createMultipleNotifications = cache(
     });
   }
 );
+
+export const getComment = cache(async (commentSlug: string) => {
+  return await prisma.comment.findUnique({
+    where: { slug: commentSlug },
+    include: {
+      _count: {
+        select: {
+          replies: true,
+        },
+      },
+      chapter: {
+        select: {
+          title: true,
+          slug: true,
+          order: true,
+          authorId: true,
+          _count: {
+            select: {
+              comments: true,
+            },
+          },
+        },
+      },
+      // only single parent
+      parent: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              slug: true,
+              name: true,
+            },
+          },
+        },
+      },
+      replies: {
+        include: {
+          replies: {
+            include: {
+              replies: {
+                include: {
+                  user: {
+                    select: {
+                      id: true,
+                      slug: true,
+                      name: true,
+                    },
+                  },
+                  _count: {
+                    select: {
+                      replies: true,
+                    },
+                  },
+                },
+              },
+              user: {
+                select: {
+                  id: true,
+                  slug: true,
+                  name: true,
+                },
+              },
+              _count: {
+                select: {
+                  replies: true,
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
+          _count: {
+            select: {
+              replies: true,
+            },
+          },
+        },
+        orderBy: { createdAt: 'asc' },
+      },
+      user: {
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+        },
+      },
+    },
+  });
+});

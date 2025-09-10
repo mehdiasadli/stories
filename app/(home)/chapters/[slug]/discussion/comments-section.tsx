@@ -52,6 +52,7 @@ interface CommentsSectionProps {
   createCommentAction: (prevState: any, formData: FormData) => Promise<any>;
   deleteCommentAction: (prevState: any, formData: FormData) => Promise<any>;
   updateCommentAction: (prevState: any, formData: FormData) => Promise<any>;
+  singleComment?: boolean;
 }
 
 export function CommentsSection({
@@ -63,6 +64,7 @@ export function CommentsSection({
   createCommentAction,
   deleteCommentAction,
   updateCommentAction,
+  singleComment = false,
 }: CommentsSectionProps) {
   const [comments] = useState<CommentData[]>(initialComments);
 
@@ -74,11 +76,13 @@ export function CommentsSection({
   return (
     <div className='space-y-6'>
       {/* Add Comment Form */}
-      <AddComment
-        chapterSlug={chapterSlug}
-        createCommentAction={createCommentAction}
-        onCommentAdded={handleCommentOperation}
-      />
+      {!singleComment && (
+        <AddComment
+          chapterSlug={chapterSlug}
+          createCommentAction={createCommentAction}
+          onCommentAdded={handleCommentOperation}
+        />
+      )}
 
       {/* Comments List */}
       <CommentList

@@ -36,7 +36,7 @@ export default async function UserCommentsPage({ params, searchParams }: UserCom
             {chapters.map((c) => (
               <Link
                 key={c.id}
-                href={`/chapters/${c.slug}/comments/${c.comments[0].slug}`}
+                href={`/chapters/${c.slug}/discussion/${c.comments[0].slug}`}
                 className='border border-gray-200 hover:border-gray-400 transition-colors p-6 bg-white flex flex-col group'
               >
                 <div className='border-b border-gray-200 mb-6 last:border-b-0 last:mb-0'>

@@ -25,6 +25,11 @@ export function slugify(text: string): string {
     .trim();
 }
 
+// slugify with unique ending with date
+export function slugifyWithDate(text: string): string {
+  return `${slugify(text)}-${Date.now()}`;
+}
+
 export function getWordCount(input: string, isHtml = true): number {
   if (isHtml) {
     const text = input.replace(/<[^>]*>?/g, '');

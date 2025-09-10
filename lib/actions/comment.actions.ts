@@ -6,7 +6,7 @@ import { auth } from '../auth';
 import { prisma } from '../prisma';
 import { respond, TResponse } from '../response';
 import { CommentCreateSchema, CommentDeleteSchema, CommentUpdateSchema, TComment } from '../schemas/comment.schema';
-import { slugify } from '../utils';
+import { slugifyWithDate } from '../utils';
 import { NotificationType } from '@prisma/client';
 import { createNotification } from '../fetchers';
 
@@ -43,7 +43,7 @@ export async function createComment(previousState: any, formData: FormData): Pro
       data: {
         ...rest,
         userId: session.user.id,
-        slug: slugify(data.content),
+        slug: slugifyWithDate(data.content),
         parentId: rest.parentId || undefined,
         chapterId: chapter.id,
       },
@@ -128,7 +128,7 @@ export async function updateComment(previousState: any, formData: FormData): Pro
       where: { id: data.id },
       data: {
         content: data.content,
-        slug: slugify(data.content),
+        slug: slugifyWithDate(data.content),
       },
     });
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Bell, Loader2 } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -49,9 +49,7 @@ export function Notifications() {
       }}
     >
       <Bell className='size-5 text-gray-600 hover:text-gray-900 transition-colors' />
-      {isLoadingCount ? (
-        <Loader2 className='size-4 animate-spin absolute -top-1 -right-1 text-xs w-3 h-3 flex items-center justify-center' />
-      ) : notificationsCount > 0 ? (
+      {notificationsCount > 0 && !isLoadingCount ? (
         <div className='absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-3 h-3 flex items-center justify-center'>
           {notificationsCount}
         </div>

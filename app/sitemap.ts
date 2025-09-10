@@ -8,7 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const characters = await getAllCharacters();
 
   const chapterEntries: MetadataRoute.Sitemap = chapters.map((chapter) => ({
-    url: `${url}/${chapter.slug}`,
+    url: `${url}/chapters/${chapter.slug}`,
     changeFrequency: 'monthly',
     lastModified: chapter.updatedAt,
   }));

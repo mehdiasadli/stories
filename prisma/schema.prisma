@@ -86,7 +86,7 @@ model Chapter {
   wordCount       Int           @default(0)
 
   authorId String
-  author   User   @relation(fields: [authorId], references: [id])
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Restrict)
 
   favorites  FavoriteChapter[]
   characters ChapterCharacter[]
@@ -105,8 +105,8 @@ model FavoriteChapter {
   chapterId String
   userId    String
 
-  chapter Chapter @relation(fields: [chapterId], references: [id])
-  user    User    @relation(fields: [userId], references: [id])
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -118,8 +118,8 @@ model ChapterRead {
   chapterId String
   userId    String
 
-  chapter Chapter @relation(fields: [chapterId], references: [id])
-  user    User    @relation(fields: [userId], references: [id])
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -166,10 +166,10 @@ model CharacterView {
   updatedAt DateTime @updatedAt
 
   characterId String
-  character   Character @relation(fields: [characterId], references: [id])
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
 
   userId String? // non authenticated users also count
-  user   User?   @relation(fields: [userId], references: [id])
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   fingerprint String?
 
@@ -181,8 +181,8 @@ model FavoriteCharacter {
   characterId String
   userId      String
 
-  character Character @relation(fields: [characterId], references: [id])
-  user      User      @relation(fields: [userId], references: [id])
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -199,8 +199,8 @@ model CharacterRelation {
   description        String?
   characterId        String
   relatedCharacterId String
-  character          Character             @relation("MainCharacterOnRelation", fields: [characterId], references: [id])
-  relatedCharacter   Character             @relation("RelatedCharacterOnRelation", fields: [relatedCharacterId], references: [id])
+  character          Character             @relation("MainCharacterOnRelation", fields: [characterId], references: [id], onDelete: Cascade)
+  relatedCharacter   Character             @relation("RelatedCharacterOnRelation", fields: [relatedCharacterId], references: [id], onDelete: Cascade)
 
   @@map("character_relations")
 }
@@ -210,8 +210,8 @@ model ChapterCharacter {
   chapterId   String
   characterId String
 
-  chapter   Chapter   @relation(fields: [chapterId], references: [id])
-  character Character @relation(fields: [characterId], references: [id])
+  chapter   Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
 
   appearanceType    CharacterAppearanceType
   note              String?                 @db.Text

@@ -43,6 +43,7 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
+import { DeleteUserModal } from './delete-user-modal';
 
 interface TUser extends Omit<User, 'password' | 'updatedAt' | 'id'> {
   _count: {
@@ -58,6 +59,7 @@ type IRow = Row<TUser>;
 
 function ActionsCell({ row }: { row: IRow }) {
   const { copy } = useCopyToClipboard();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleCopySlug = () => {
     copy(row.original.slug);
@@ -78,27 +80,59 @@ function ActionsCell({ row }: { row: IRow }) {
     }
   };
 
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button className='size-7' mode='icon' variant='ghost'>
-          <Ellipsis />
-        </Button>
-      </DropdownMenuTrigger>
+  const handleDeleteUser = async () => {
+    const response = await fetch(`/api/users/delete`, {
+      method: 'DELETE',
+      body: JSON.stringify({ slug: row.original.slug }),
+    });
 
-      <DropdownMenuContent side='bottom' align='end'>
-        <DropdownMenuItem onClick={handleCopySlug}>Copy Slug</DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href={`/users/${row.original.slug}`}>Go to User</Link>
-        </DropdownMenuItem>
-        {row.original.hasAdminVerified ? null : (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleVerifyUser}>Verify User</DropdownMenuItem>
-          </>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    if (response.ok) {
+      toast.message('User deleted successfully');
+      window.location.reload();
+    } else {
+      toast.error('Failed to delete user');
+    }
+  };
+
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button className='size-7' mode='icon' variant='ghost'>
+            <Ellipsis />
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent side='bottom' align='end'>
+          <DropdownMenuItem onClick={handleCopySlug}>Copy Slug</DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href={`/users/${row.original.slug}`}>Go to User</Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={handleVerifyUser}
+            className={row.original.hasAdminVerified ? 'text-destructive' : 'text-green-500'}
+          >
+            {row.original.hasAdminVerified ? 'Unverify User' : 'Verify User'}
+          </DropdownMenuItem>
+          {!row.original.admin && (
+            <DropdownMenuItem onClick={openDeleteModal} className='text-destructive'>
+              Delete User
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <DeleteUserModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        slug={row.original.slug}
+      />
+    </>
   );
 }
 
@@ -309,7 +343,9 @@ export function DashboardUsersTable({ users }: { users: TUser[] }) {
         </CardHeader>
         <CardTable>
           <ScrollArea>
-            <DataGridTable />
+            <div suppressHydrationWarning>
+              <DataGridTable />
+            </div>
             <ScrollBar orientation='horizontal' />
           </ScrollArea>
         </CardTable>

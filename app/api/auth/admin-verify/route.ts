@@ -27,10 +27,10 @@ export async function POST(request: NextRequest) {
 
     await prisma.user.update({
       where: { slug },
-      data: { hasAdminVerified: true },
+      data: { hasAdminVerified: !user.hasAdminVerified },
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, message: `User ${user.hasAdminVerified ? 'unverified' : 'verified'}` });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

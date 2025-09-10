@@ -54,30 +54,40 @@ export function NavUser() {
               <div className='text-xs text-gray-500'>{user.email}</div>
             </div>
 
-            <div className='py-2'>
+            <div>
               <Link
                 href={`/users/${user.slug}`}
-                className='block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors'
+                className='block px-3 py-3 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors'
                 onClick={() => setIsMenuOpen(false)}
               >
                 profil
               </Link>
               {user.admin && (
-                <Link
-                  href='/dashboard/chapters'
-                  className='block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors'
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  dashboard
-                </Link>
+                <div className='border-t border-gray-200 py-3 flex flex-col gap-1'>
+                  <p className='px-3 py-1 text-sm text-gray-800'>dashboard</p>
+                  <Link
+                    href='/dashboard/chapters'
+                    className='block px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors'
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    chapters
+                  </Link>
+                  <Link
+                    href='/dashboard/characters'
+                    className='block px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors'
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    characters
+                  </Link>
+                  <Link
+                    href='/dashboard/users'
+                    className='block px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors'
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    users
+                  </Link>
+                </div>
               )}
-              {/* <Link
-                href='/settings'
-                className='block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors'
-                onClick={() => setIsMenuOpen(false)}
-              >
-                ayarlar
-              </Link> */}
             </div>
 
             <div className='border-t border-gray-200 py-2'>

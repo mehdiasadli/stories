@@ -77,6 +77,9 @@ function ActionsCell({ row }: { row: IRow }) {
         <DropdownMenuItem asChild>
           <Link href={`/dashboard/characters/${row.original.slug}/edit`}>Edit Character</Link>
         </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href={`/dashboard/characters/${row.original.slug}/edit/wiki`}>Edit Wiki</Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link href={`/dashboard/characters/${row.original.slug}/delete`}>Delete Character</Link>

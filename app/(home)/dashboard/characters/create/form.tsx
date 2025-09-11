@@ -86,7 +86,11 @@ export function CreateCharacterForm() {
       if (response.ok && result.success) {
         setSuccess(result.message || 'Character created successfully');
         toast.success('Character created successfully');
-        router.push(`/characters/${result.data.slug}`);
+        if (result.data.published) {
+          router.push(`/characters/${result.data.slug}`);
+        } else {
+          router.push(`/dashboard/characters`);
+        }
       } else {
         setError(result.error || 'Failed to create character');
         toast.error(result.error || 'Failed to create character');

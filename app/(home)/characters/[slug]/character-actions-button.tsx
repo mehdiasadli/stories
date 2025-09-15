@@ -82,7 +82,9 @@ export function CharacterActionsButton({ characterSlug }: CharacterActionsButton
     return (
       <div className='mt-8 pt-6 border-t border-gray-200'>
         <div className='text-center'>
-          <p className='text-sm text-gray-600 mb-4'>personajı favoritlərə əlavə etmək üçün daxil olun</p>
+          <p className='text-sm text-gray-600 mb-4'>
+            personaj haqqında məlumatları oxumaq və favoritlərə əlavə etmək üçün daxil olun
+          </p>
           <Link
             href={`/auth/login?characterRef=${characterSlug}`}
             className='inline-flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors border border-gray-200 hover:border-gray-400 bg-white hover:bg-gray-50'

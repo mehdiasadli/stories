@@ -9,6 +9,7 @@ import { ChapterShareOptions } from './share-options';
 import { ChapterActions } from './chapter-actions';
 import { ChapterActionsButtons } from './chapter-actions-buttons';
 import { getAllChapters, getChapter } from '@/lib/fetchers';
+import { auth } from '@/lib/auth';
 
 export const revalidate = 300; // 5 minutes
 export const dynamicParams = true; // Allow dynamic params for newly published chapters
@@ -81,6 +82,8 @@ interface ChapterPageProps {
 
 export default async function ChapterPage({ params }: ChapterPageProps) {
   const { slug } = await params;
+  const session = await auth();
+  const userId = session?.user?.id;
 
   const chapter = await getChapter(slug, true);
 
@@ -155,12 +158,18 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
           </div>
 
           {/* Content */}
-          <div className='prose prose-lg max-w-none'>
-            <div
-              className='chapter-content'
-              dangerouslySetInnerHTML={{ __html: chapter.content || '<p>kontent yoxdur.</p>' }}
-            />
-          </div>
+          {userId ? (
+            <div className='prose prose-lg max-w-none'>
+              <div
+                className='chapter-content'
+                dangerouslySetInnerHTML={{ __html: chapter.content || '<p>kontent yoxdur.</p>' }}
+              />
+            </div>
+          ) : (
+            <div className='text-center'>
+              <p className='text-sm text-gray-500 mb-4'>------</p>
+            </div>
+          )}
 
           {/* Chapter Actions Buttons */}
           <ChapterActionsButtons chapterSlug={slug} />
@@ -176,12 +185,14 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
                 {chapter._count.comments} şərh
               </Link>
 
-              <Link
-                href={`/chapters/${slug}/download`}
-                className='text-gray-600 hover:text-gray-900 transition-colors border-b border-gray-200 hover:border-gray-400 pb-1'
-              >
-                yüklə
-              </Link>
+              {userId && (
+                <Link
+                  href={`/chapters/${slug}/download`}
+                  className='text-gray-600 hover:text-gray-900 transition-colors border-b border-gray-200 hover:border-gray-400 pb-1'
+                >
+                  yüklə
+                </Link>
+              )}
 
               <ChapterActions chapterSlug={slug} authorId={chapter.authorId} />
 

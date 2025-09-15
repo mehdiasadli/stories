@@ -6,6 +6,7 @@ import { CharacterAppearances } from './character-appearances';
 import { CharacterFooter } from './footer';
 import { CharacterArticle } from './character-article';
 import { CharacterHeader } from './character-header';
+import { auth } from '@/lib/auth';
 
 export const revalidate = 300; // 5 minutes
 export const dynamicParams = true; // Allow dynamic params for newly published characters
@@ -20,6 +21,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: CharacterPageProps): Promise<Metadata> {
   const { slug } = await params;
+  const authorId = await getAuthorId();
   const character = await getCharacter(slug);
 
   if (!character || !character.published) {
@@ -77,6 +79,8 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
 
   const character = await getCharacter(slug);
   const authorId = await getAuthorId();
+  const session = await auth();
+  const userId = session?.user?.id;
 
   if (!character || !character.published || !authorId) {
     notFound();
@@ -99,6 +103,7 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
       url: `${baseUrl}`,
       author: {
         '@type': 'Person',
+        authorId,
       },
     },
   };
@@ -118,19 +123,25 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
           <CharacterHeader name={character.name} slug={slug} />
 
           {/* Wikipedia-style Layout */}
-          <div className='flex flex-col lg:flex-row gap-8'>
-            {/* Main Content */}
-            <div className='flex-1'>
-              {/* Description Blockquote */}
-              <CharacterArticle character={character} />
+          {userId ? (
+            <div className='flex flex-col lg:flex-row gap-8'>
+              {/* Main Content */}
+              <div className='flex-1'>
+                {/* Description Blockquote */}
+                <CharacterArticle character={character} />
 
-              {/* Chapter Appearances */}
-              {character.chapters && character.chapters.length > 0 && <CharacterAppearances character={character} />}
+                {/* Chapter Appearances */}
+                {character.chapters && character.chapters.length > 0 && <CharacterAppearances character={character} />}
+              </div>
+
+              {/* Wikipedia-style Info Box */}
+              <CharacterInfoBox character={character} />
             </div>
-
-            {/* Wikipedia-style Info Box */}
-            <CharacterInfoBox character={character} />
-          </div>
+          ) : (
+            <div className='text-center'>
+              <p className='text-sm text-gray-500 mb-4'>------</p>
+            </div>
+          )}
 
           {/* Footer */}
           <CharacterFooter character={character} authorId={authorId} />

@@ -59,7 +59,7 @@ export function SearchBar({ dashboard, characters }: { dashboard?: boolean; char
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          <div className='flex gap-2 items-center justify-end flex-wrap w-full'>
+          {/* <div className='flex gap-2 items-center justify-end flex-wrap w-full'>
             {!characters && (
               <select
                 className='px-4 py-3 text-sm border border-gray-200 rounded-none focus:outline-none focus:border-gray-400 bg-white'
@@ -97,7 +97,7 @@ export function SearchBar({ dashboard, characters }: { dashboard?: boolean; char
                 <option value='this-year'>bu il</option>
               </select>
             )}
-          </div>
+          </div> */}
         </div>
 
         {/* Status filter for dashboard only */}

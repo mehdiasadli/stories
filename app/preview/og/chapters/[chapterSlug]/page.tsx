@@ -1,5 +1,6 @@
 import { getChapter } from '@/lib/fetchers';
 import { format } from 'date-fns';
+import { az } from 'date-fns/locale';
 import { notFound } from 'next/navigation';
 
 export default async function TestOGPage(props: { params: Promise<{ chapterSlug: string }> }) {
@@ -14,64 +15,158 @@ export default async function TestOGPage(props: { params: Promise<{ chapterSlug:
     <div className='min-h-screen bg-white flex items-center justify-center'>
       <div className='w-[1200px] h-[630px] border border-gray-200 rounded-xl overflow-hidden shadow-sm'>
         <div
-          className='w-full h-full relative flex flex-col'
           style={{
+            width: '100%',
+            height: '100%',
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
             background: 'radial-gradient(1200px 600px at 50% 40%, #f7f3e9 0%, #f1ecdf 60%, #ebe5d7 100%)',
-            fontFamily: 'Times New Roman, Times, serif',
           }}
         >
-          {/* Book header spacing */}
-          <div className='px-12 pt-10' />
+          <div style={{ display: 'flex', padding: '40px 48px 0 48px' }}></div>
 
-          {/* Content */}
-          <div className='px-16 pb-24 flex-1 flex flex-col items-center text-[#2f2b24]'>
-            <div className='w-full max-w-[900px] text-center'>
-              <div className='text-[#6b6558] text-[34px] leading-none italic'>mahmud • Bölüm #{chapter.order}</div>
-              <div className='mt-4 text-[#1f1b15] text-[64px] leading-[1.05] font-semibold tracking-tight line-clamp-3'>
-                {chapter.title}
+          <div
+            style={{
+              padding: '0 64px 96px 64px',
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              color: '#2f2b24',
+            }}
+          >
+            <div
+              style={{
+                width: '100%',
+                maxWidth: '900px',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  color: '#6b6558',
+                  fontSize: '34px',
+                  lineHeight: 1,
+                  fontStyle: 'italic',
+                }}
+              >
+                mahmud • bölüm #{chapter.order || '?'}
               </div>
-              <div className='mt-6 text-[#4a463f] text-[22px] leading-snug line-clamp-3'>
-                {chapter.synopsis || 'Bu bölüm haqqında təsvir mövcud deyil.'}
+
+              <div
+                style={{
+                  display: 'flex',
+                  marginTop: '16px',
+                  color: '#1f1b15',
+                  fontSize: '72px',
+                  lineHeight: 1.05,
+                  fontWeight: 600,
+                  letterSpacing: '-0.02em',
+                  wordWrap: 'break-word',
+                  maxWidth: '100%',
+                }}
+              >
+                {chapter.title || 'Başlıq yoxdur'}
               </div>
-              <div className='mt-8 flex items-center justify-center gap-6 text-[#6b6558]'>
-                <div className='text-[16px]'>
-                  <span className='text-[#2f2b24] font-semibold'>{chapter.author?.name}</span>
+
+              <div
+                style={{
+                  display: 'flex',
+                  marginTop: '24px',
+                  color: '#4a463f',
+                  fontSize: '30px',
+                  lineHeight: 1.3,
+                  wordWrap: 'break-word',
+                  maxWidth: '100%',
+                }}
+              >
+                {chapter.synopsis || 'bu bölüm haqqında təsvir mövcud deyil.'}
+              </div>
+
+              <div
+                style={{
+                  marginTop: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '24px',
+                  color: '#6b6558',
+                }}
+              >
+                <div style={{ display: 'flex', fontSize: '20px' }}>
+                  <span style={{ color: '#2f2b24', fontWeight: 600 }}>{chapter.author?.name || 'yazar tapılmadı'}</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Bookish footer with stats, characters, and date */}
-          <div className='absolute inset-x-0 bottom-0'>
-            <div className='px-10 py-4 border-t' style={{ borderColor: '#d8d3c4', backgroundColor: '#f3efe6' }}>
-              <div className='flex items-center justify-between gap-6 text-[#4a463f]'>
-                {/* Left: stats */}
-                <div className='flex items-center gap-5 text-[13px] tracking-wide'>
-                  <span className='flex items-baseline gap-2'>
-                    <span className='text-[20px] font-semibold text-[#2f2b24]'>{chapter._count.reads}</span>
-                    <span className='uppercase'>Oxuma</span>
+          <div
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: 'flex',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                padding: '45px 45px',
+                borderTop: '1px solid #d8d3c4',
+                backgroundColor: '#f3efe6',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '24px',
+                  color: '#4a463f',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '20px',
+                    fontSize: '13px',
+                  }}
+                >
+                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                    <span style={{ display: 'flex', fontSize: '40px', fontWeight: 600, color: '#2f2b24' }}>
+                      {chapter._count?.reads || 0}
+                    </span>
+                    <span style={{ display: 'flex', fontSize: '36px' }}>oxuma</span>
                   </span>
-                  <span aria-hidden='true' className='text-[#d0cabc]'>
-                    •
+                  <span style={{ display: 'flex', color: '#d0cabc', fontSize: '30px' }}>•</span>
+                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                    <span style={{ display: 'flex', fontSize: '40px', fontWeight: 600, color: '#2f2b24' }}>
+                      {chapter._count?.favorites || 0}
+                    </span>
+                    <span style={{ display: 'flex', fontSize: '36px' }}>favorit</span>
                   </span>
-                  <span className='flex items-baseline gap-2'>
-                    <span className='text-[20px] font-semibold text-[#2f2b24]'>{chapter._count.favorites}</span>
-                    <span className='uppercase'>Favorit</span>
-                  </span>
-                  <span aria-hidden='true' className='text-[#d0cabc]'>
-                    •
-                  </span>
-                  <span className='flex items-baseline gap-2'>
-                    <span className='text-[20px] font-semibold text-[#2f2b24]'>{chapter._count.comments}</span>
-                    <span className='uppercase'>Şərh</span>
+                  <span style={{ display: 'flex', color: '#d0cabc', fontSize: '30px' }}>•</span>
+                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                    <span style={{ display: 'flex', fontSize: '40px', fontWeight: 600, color: '#2f2b24' }}>
+                      {chapter._count?.comments || 0}
+                    </span>
+                    <span style={{ display: 'flex', fontSize: '36px' }}>şərh</span>
                   </span>
                 </div>
 
-                {/* Right: characters and date */}
-                <div className='flex items-center gap-4'>
+                <div style={{ display: 'flex' }}>
                   {chapter.publishedAt && (
-                    <div className='text-[15px] text-[#6b6558] whitespace-nowrap'>
-                      {format(new Date(chapter.publishedAt), 'd MMMM yyyy, HH:mm')}
+                    <div style={{ display: 'flex', fontSize: '30px', color: '#6b6558', whiteSpace: 'nowrap' }}>
+                      {format(new Date(chapter.publishedAt), 'd MMMM yyyy, HH:mm', { locale: az })}
                     </div>
                   )}
                 </div>

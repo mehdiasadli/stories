@@ -70,6 +70,9 @@ function ActionsCell({ row }: { row: IRow }) {
         <DropdownMenuItem asChild>
           <Link href={`/chapters/${row.original.slug}`}>Go to Chapter</Link>
         </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href={`/preview/og/chapters/${row.original.slug}`}>Preview OG</Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link href={`/dashboard/chapters/${row.original.slug}/edit`}>Edit Chapter</Link>

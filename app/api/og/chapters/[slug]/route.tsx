@@ -92,7 +92,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                   display: 'flex',
                   marginTop: '16px',
                   color: '#1f1b15',
-                  fontSize: '64px',
+                  fontSize: '72px',
                   lineHeight: 1.05,
                   fontWeight: 600,
                   letterSpacing: '-0.02em',
@@ -108,7 +108,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                   display: 'flex',
                   marginTop: '24px',
                   color: '#4a463f',
-                  fontSize: '22px',
+                  fontSize: '30px',
                   lineHeight: 1.3,
                   wordWrap: 'break-word',
                   maxWidth: '100%',
@@ -127,7 +127,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                   color: '#6b6558',
                 }}
               >
-                <div style={{ display: 'flex', fontSize: '16px' }}>
+                <div style={{ display: 'flex', fontSize: '20px' }}>
                   <span style={{ color: '#2f2b24', fontWeight: 600 }}>{chapter.author?.name || 'yazar tapılmadı'}</span>
                 </div>
               </div>
@@ -148,7 +148,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                 display: 'flex',
                 flexDirection: 'column',
                 width: '100%',
-                padding: '16px 40px',
+                padding: '45px 45px',
                 borderTop: '1px solid #d8d3c4',
                 backgroundColor: '#f3efe6',
               }}
@@ -171,30 +171,30 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                   }}
                 >
                   <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
+                    <span style={{ display: 'flex', fontSize: '40px', fontWeight: 600, color: '#2f2b24' }}>
                       {chapter._count?.reads || 0}
                     </span>
-                    <span style={{ display: 'flex' }}>oxuma</span>
+                    <span style={{ display: 'flex', fontSize: '36px' }}>oxuma</span>
                   </span>
-                  <span style={{ display: 'flex', color: '#d0cabc' }}>•</span>
+                  <span style={{ display: 'flex', color: '#d0cabc', fontSize: '30px' }}>•</span>
                   <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
+                    <span style={{ display: 'flex', fontSize: '40px', fontWeight: 600, color: '#2f2b24' }}>
                       {chapter._count?.favorites || 0}
                     </span>
-                    <span style={{ display: 'flex' }}>favorit</span>
+                    <span style={{ display: 'flex', fontSize: '36px' }}>favorit</span>
                   </span>
-                  <span style={{ display: 'flex', color: '#d0cabc' }}>•</span>
+                  <span style={{ display: 'flex', color: '#d0cabc', fontSize: '30px' }}>•</span>
                   <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
+                    <span style={{ display: 'flex', fontSize: '40px', fontWeight: 600, color: '#2f2b24' }}>
                       {chapter._count?.comments || 0}
                     </span>
-                    <span style={{ display: 'flex' }}>şərh</span>
+                    <span style={{ display: 'flex', fontSize: '36px' }}>şərh</span>
                   </span>
                 </div>
 
                 <div style={{ display: 'flex' }}>
                   {chapter.publishedAt && (
-                    <div style={{ display: 'flex', fontSize: '15px', color: '#6b6558', whiteSpace: 'nowrap' }}>
+                    <div style={{ display: 'flex', fontSize: '30px', color: '#6b6558', whiteSpace: 'nowrap' }}>
                       {format(new Date(chapter.publishedAt), 'd MMMM yyyy, HH:mm', { locale: az })}
                     </div>
                   )}

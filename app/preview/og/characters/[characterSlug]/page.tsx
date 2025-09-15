@@ -1,130 +1,189 @@
 import { getCharacter } from '@/lib/fetchers';
+import { notFound } from 'next/navigation';
 
 export default async function CharacterOGPage(props: { params: Promise<{ characterSlug: string }> }) {
   const { characterSlug } = await props.params;
   const character = await getCharacter(characterSlug);
 
-  const SHOW_ALIASES_COUNT = 6;
+  if (!character) {
+    return notFound();
+  }
 
   return (
     <div className='min-h-screen bg-white flex items-center justify-center'>
       <div className='w-[1200px] h-[630px] border border-gray-200 rounded-xl overflow-hidden shadow-sm'>
         <div
-          className='w-full h-full relative flex flex-col'
           style={{
+            width: '100%',
+            height: '100%',
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
             background: 'radial-gradient(1200px 600px at 50% 40%, #ffffff 0%, #fbfaf7 60%, #f6f3ec 100%)',
             fontFamily: 'Times New Roman, Times, serif',
           }}
         >
-          {/* Book header spacing */}
-          <div className='px-12 pt-10' />
+          <div style={{ display: 'flex', padding: '40px 48px 0 48px' }} />
 
-          {/* Content: two-column with portrait left */}
-          <div className='px-16 pb-24 flex-1 grid grid-cols-[420px_1fr] gap-10 items-center text-[#2f2b24]'>
-            {/* Left: portrait */}
+          <div
+            style={{
+              padding: '0 64px 96px 64px',
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'row',
+              gap: '40px',
+              alignItems: 'center',
+              color: '#2f2b24',
+            }}
+          >
             <div
-              className='h-[420px] w-[420px] rounded-xl overflow-hidden border'
-              style={{ borderColor: '#d8d3c4', backgroundColor: '#fbfaf7' }}
+              style={{
+                display: 'flex',
+                height: '420px',
+                width: '420px',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                border: '1px solid #d8d3c4',
+                backgroundColor: '#fbfaf7',
+              }}
             >
-              {character?.profileImageUrl ? (
+              {character.profileImageUrl ? (
                 <div
-                  className='h-full w-full'
                   style={{
+                    display: 'flex',
+                    height: '100%',
+                    width: '100%',
                     backgroundImage: `url(${character.profileImageUrl})`,
-                    backgroundSize: 'cover',
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
                   }}
                 />
               ) : (
                 <div
-                  className='h-full w-full flex items-center justify-center text-[#6b5e45]'
                   style={{
+                    display: 'flex',
+                    height: '100%',
+                    width: '100%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#6b5e45',
                     background: 'repeating-linear-gradient(45deg, #faf9f6, #faf9f6 10px, #f3f1ea 10px, #f3f1ea 20px)',
                   }}
                 >
                   <span
-                    className='text-[160px] leading-none font-semibold'
-                    style={{ textShadow: '0 1px 0 rgba(255,255,255,0.7), 0 3px 10px rgba(0,0,0,0.08)' }}
+                    style={{
+                      fontSize: '160px',
+                      lineHeight: 1,
+                      fontWeight: 600,
+                      textShadow: '0 1px 0 rgba(255,255,255,0.7), 0 3px 10px rgba(0,0,0,0.08)',
+                    }}
                   >
-                    {((character?.name?.[0] || '?') as string).toUpperCase()}
+                    {((character.name?.[0] || '?') as string).toUpperCase()}
                   </span>
                 </div>
               )}
             </div>
 
-            {/* Right: text */}
-            <div className='pr-6'>
-              <div className='text-[#6b6558] text-[34px] leading-none italic'>mahmud • personaj</div>
-              <div className='mt-4 text-[#1f1b15] text-[64px] leading-[1.05] font-semibold tracking-tight line-clamp-3'>
-                {character?.name || 'personaj tapılmadı'}
+            <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '24px', flex: 1 }}>
+              <div
+                style={{
+                  display: 'flex',
+                  color: '#6b6558',
+                  fontSize: '40px',
+                  lineHeight: 1,
+                  fontStyle: 'italic',
+                }}
+              >
+                mahmud • personaj
               </div>
-              {character?.description && (
-                <div className='mt-4 text-[#4a463f] text-[20px] leading-snug line-clamp-4'>{character.description}</div>
-              )}
-              {character?.aliases && character?.aliases.length > 0 && (
-                <div className='mt-6 flex items-center gap-2 flex-wrap max-w-[700px]'>
-                  {character.aliases.slice(0, SHOW_ALIASES_COUNT).map((alias) => (
-                    <span
-                      key={alias}
-                      className='px-2.5 py-[2px] rounded-full border text-[#2f2b24] text-[12px]'
-                      style={{ borderColor: '#d8d3c4', backgroundColor: '#fbfaf7' }}
-                    >
-                      {alias}
-                    </span>
-                  ))}
-                  {character.aliases.length > SHOW_ALIASES_COUNT && (
-                    <span
-                      className='px-2.5 py-[2px] rounded-full border text-[#2f2b24] text-[12px]'
-                      style={{ borderColor: '#d8d3c4', backgroundColor: '#fbfaf7' }}
-                    >
-                      +{character.aliases.length - SHOW_ALIASES_COUNT}
-                    </span>
-                  )}
+              <div
+                style={{
+                  display: 'flex',
+                  marginTop: '16px',
+                  color: '#1f1b15',
+                  fontSize: '72px',
+                  lineHeight: 1.05,
+                  fontWeight: 600,
+                  letterSpacing: '-0.02em',
+                  wordWrap: 'break-word',
+                }}
+              >
+                {character.name || 'personaj tapılmadı'}
+              </div>
+              {character.description && (
+                <div
+                  style={{
+                    display: 'flex',
+                    marginTop: '16px',
+                    color: '#4a463f',
+                    fontSize: '30px',
+                    lineHeight: 1.3,
+                    wordWrap: 'break-word',
+                  }}
+                >
+                  {character.description}
                 </div>
               )}
             </div>
           </div>
 
-          {/* Bookish footer with stats and birth info */}
-          <div className='absolute inset-x-0 bottom-0'>
-            <div className='px-10 py-4 border-t' style={{ borderColor: '#d8d3c4', backgroundColor: '#fbfaf7' }}>
-              <div className='flex items-center justify-between gap-6 text-[#4a463f]'>
-                {/* Left: stats */}
-                <div className='flex items-center gap-5 text-[13px] tracking-wide'>
-                  <span className='flex items-baseline gap-2'>
-                    <span className='text-[20px] font-semibold text-[#2f2b24]'>
-                      {character?._count?.chapters || character?.chapters?.length || 0}
+          <div
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: 'flex',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                padding: '25px 40px',
+                borderTop: '1px solid #d8d3c4',
+                backgroundColor: '#f3efe6',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '24px',
+                  color: '#4a463f',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '20px',
+                    fontSize: '13px',
+                  }}
+                >
+                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                    <span style={{ display: 'flex', fontSize: '40px', fontWeight: 600, color: '#2f2b24' }}>
+                      {character._count?.chapters || 0}
                     </span>
-                    <span>iştirak</span>
+                    <span style={{ display: 'flex', fontSize: '36px' }}>iştirak</span>
                   </span>
-                  <span aria-hidden='true' className='text-[#d0cabc]'>
-                    •
-                  </span>
-                  <span className='flex items-baseline gap-2'>
-                    <span className='text-[20px] font-semibold text-[#2f2b24]'>{character?._count?.views || 0}</span>
-                    <span>baxış</span>
-                  </span>
-                  <span aria-hidden='true' className='text-[#d0cabc]'>
-                    •
-                  </span>
-                  <span className='flex items-baseline gap-2'>
-                    <span className='text-[20px] font-semibold text-[#2f2b24]'>
-                      {character?._count?.favorites || 0}
+                  <span style={{ display: 'flex', color: '#d0cabc', fontSize: '30px' }}>•</span>
+                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                    <span style={{ display: 'flex', fontSize: '40px', fontWeight: 600, color: '#2f2b24' }}>
+                      {character._count?.views || 0}
                     </span>
-                    <span>favorit</span>
+                    <span style={{ display: 'flex', fontSize: '36px' }}>baxış</span>
                   </span>
-                </div>
-                {/* Right: birth info */}
-                <div className='flex items-center gap-3 text-[13px] text-[#6b6558]'>
-                  {character?.dateOfBirth && <span className='text-[#2f2b24]'>{character?.dateOfBirth || ''}</span>}
-                  {character?.placeOfBirth && (
-                    <>
-                      <span aria-hidden='true' className='text-[#d0cabc]'>
-                        •
-                      </span>
-                      <span className='text-[#2f2b24]'>{character?.placeOfBirth}</span>
-                    </>
-                  )}
+                  <span style={{ display: 'flex', color: '#d0cabc', fontSize: '30px' }}>•</span>
+                  <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                    <span style={{ display: 'flex', fontSize: '40px', fontWeight: 600, color: '#2f2b24' }}>
+                      {character._count?.favorites || 0}
+                    </span>
+                    <span style={{ display: 'flex', fontSize: '36px' }}>favorit</span>
+                  </span>
                 </div>
               </div>
             </div>

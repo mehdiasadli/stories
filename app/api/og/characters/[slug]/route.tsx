@@ -119,7 +119,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                 style={{
                   display: 'flex',
                   color: '#6b6558',
-                  fontSize: '34px',
+                  fontSize: '40px',
                   lineHeight: 1,
                   fontStyle: 'italic',
                 }}
@@ -131,7 +131,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                   display: 'flex',
                   marginTop: '16px',
                   color: '#1f1b15',
-                  fontSize: '64px',
+                  fontSize: '72px',
                   lineHeight: 1.05,
                   fontWeight: 600,
                   letterSpacing: '-0.02em',
@@ -146,7 +146,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                     display: 'flex',
                     marginTop: '16px',
                     color: '#4a463f',
-                    fontSize: '20px',
+                    fontSize: '30px',
                     lineHeight: 1.3,
                     wordWrap: 'break-word',
                   }}
@@ -171,7 +171,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                 display: 'flex',
                 flexDirection: 'column',
                 width: '100%',
-                padding: '16px 40px',
+                padding: '25px 40px',
                 borderTop: '1px solid #d8d3c4',
                 backgroundColor: '#f3efe6',
               }}
@@ -194,24 +194,24 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                   }}
                 >
                   <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
+                    <span style={{ display: 'flex', fontSize: '40px', fontWeight: 600, color: '#2f2b24' }}>
                       {character._count?.chapters || 0}
                     </span>
-                    <span style={{ display: 'flex' }}>iştirak</span>
+                    <span style={{ display: 'flex', fontSize: '36px' }}>iştirak</span>
                   </span>
-                  <span style={{ display: 'flex', color: '#d0cabc' }}>•</span>
+                  <span style={{ display: 'flex', color: '#d0cabc', fontSize: '30px' }}>•</span>
                   <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
+                    <span style={{ display: 'flex', fontSize: '40px', fontWeight: 600, color: '#2f2b24' }}>
                       {character._count?.views || 0}
                     </span>
-                    <span style={{ display: 'flex' }}>baxış</span>
+                    <span style={{ display: 'flex', fontSize: '36px' }}>baxış</span>
                   </span>
-                  <span style={{ display: 'flex', color: '#d0cabc' }}>•</span>
+                  <span style={{ display: 'flex', color: '#d0cabc', fontSize: '30px' }}>•</span>
                   <span style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#2f2b24' }}>
+                    <span style={{ display: 'flex', fontSize: '40px', fontWeight: 600, color: '#2f2b24' }}>
                       {character._count?.favorites || 0}
                     </span>
-                    <span style={{ display: 'flex' }}>favorit</span>
+                    <span style={{ display: 'flex', fontSize: '36px' }}>favorit</span>
                   </span>
                 </div>
               </div>

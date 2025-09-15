@@ -76,3 +76,29 @@ export function generateFingerprint(req: NextRequest) {
   // hash the ip, ua, and ts
   return crypto.createHash('sha256').update(`${ip}-${ua}-${ts}`).digest('hex');
 }
+
+export function calculateUserScore(
+  readChapters: number,
+  favoriteChapters: number,
+  viewCharacters: number,
+  favoriteCharacters: number,
+  comments: number
+) {
+  const weights = {
+    viewCharacters: 1,
+    favoriteCharacters: 1.2,
+    readChapters: 2,
+    favoriteChapters: 2.5,
+    comments: 3,
+  };
+
+  const score =
+    weights.viewCharacters * viewCharacters +
+    weights.favoriteCharacters * favoriteCharacters +
+    weights.readChapters * readChapters +
+    weights.favoriteChapters * favoriteChapters +
+    weights.comments * comments;
+
+  const fixed = score.toFixed(1);
+  return parseFloat(fixed);
+}

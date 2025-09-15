@@ -30,7 +30,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { Ellipsis, Search, X, UserPlus } from 'lucide-react';
+import { Ellipsis, Search, X, UserPlus, EyeIcon, UserIcon, AtSignIcon, BookOpenIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -156,16 +156,33 @@ export function DashboardCharactersTable({ characters }: { characters: IData[] }
         enableResizing: true,
       },
       {
-        accessorFn: (row) => row._count.chapters,
-        id: 'chapters',
-        header: ({ column }) => <DataGridColumnHeader title='Chapters' visibility={true} column={column} />,
-        cell: ({ row }) => (
-          <div className='font-medium text-foreground'>
-            {row.original.chapters.filter((c) => c.appearanceType === 'POV').length} p.{' '}
-            {row.original.chapters.filter((c) => c.appearanceType === 'APPEARANCE').length} a.{' '}
-            {row.original.chapters.filter((c) => c.appearanceType === 'MENTION').length} m.
-          </div>
-        ),
+        accessorFn: (row) => `${row._count.chapters} p. ${row._count.favorites} f. ${row._count.views} v.`,
+        id: 'stats',
+        header: ({ column }) => <DataGridColumnHeader title='Stats' visibility={true} column={column} />,
+        sortingFn: (rowA, rowB) => {
+          const totalA = rowA.original._count.chapters;
+          const totalB = rowB.original._count.chapters;
+          return totalA - totalB;
+        },
+        cell: ({ row }) => {
+          const pov = row.original.chapters.filter((c) => c.appearanceType === 'POV').length;
+          const appearance = row.original.chapters.filter((c) => c.appearanceType === 'APPEARANCE').length;
+          const mention = row.original.chapters.filter((c) => c.appearanceType === 'MENTION').length;
+
+          return (
+            <div className='font-medium text-foreground grid grid-cols-2 md:grid-cols-3 gap-1'>
+              <span className='flex items-center gap-1' title='POV'>
+                {pov} <EyeIcon className='size-3' />
+              </span>
+              <span className='flex items-center gap-1' title='Appearance'>
+                {appearance} <UserIcon className='size-3' />
+              </span>
+              <span className='flex items-center gap-1' title='Mention'>
+                {mention} <AtSignIcon className='size-3' />
+              </span>
+            </div>
+          );
+        },
         size: 60,
         enableSorting: true,
         enableHiding: true,

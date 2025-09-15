@@ -38,12 +38,14 @@ import {
   HeartIcon,
   BookmarkCheckIcon,
   BookOpenIcon,
+  StarIcon,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
 import { DeleteUserModal } from './delete-user-modal';
+import { calculateUserScore } from '@/lib/utils';
 
 interface TUser extends Omit<User, 'password' | 'updatedAt' | 'id'> {
   _count: {
@@ -230,22 +232,50 @@ export function DashboardUsersTable({ users }: { users: TUser[] }) {
           `${row._count.comments} c. ${row._count.characterViews} v. ${row._count.favoriteChapters} f. ${row._count.favoriteCharacters} f. ${row._count.reads} r.`,
         id: 'stats',
         header: ({ column }) => <DataGridColumnHeader title='Stats' visibility={true} column={column} />,
+        sortingFn: (rowA, rowB) => {
+          const scoreA = calculateUserScore(
+            rowA.original._count.reads,
+            rowA.original._count.favoriteChapters,
+            rowA.original._count.characterViews,
+            rowA.original._count.favoriteCharacters,
+            rowA.original._count.comments
+          );
+
+          const scoreB = calculateUserScore(
+            rowB.original._count.reads,
+            rowB.original._count.favoriteChapters,
+            rowB.original._count.characterViews,
+            rowB.original._count.favoriteCharacters,
+            rowB.original._count.comments
+          );
+          return scoreA - scoreB;
+        },
         cell: ({ row }) => (
           <div className='font-medium text-foreground grid grid-cols-2 md:grid-cols-3 gap-1'>
-            <span className='flex items-center gap-1'>
+            <span className='flex items-center gap-1' title='Comments'>
               {row.original._count.comments} <MessageCircleIcon className='size-3' />
             </span>
-            <span className='flex items-center gap-1'>
+            <span className='flex items-center gap-1' title='Character Views'>
               {row.original._count.characterViews} <EyeIcon className='size-3' />
             </span>
-            <span className='flex items-center gap-1'>
+            <span className='flex items-center gap-1' title='Favorite Chapters'>
               {row.original._count.favoriteChapters} <BookmarkCheckIcon className='size-3' />
             </span>
-            <span className='flex items-center gap-1'>
+            <span className='flex items-center gap-1' title='Favorite Characters'>
               {row.original._count.favoriteCharacters} <HeartIcon className='size-3' />
             </span>
-            <span className='flex items-center gap-1'>
+            <span className='flex items-center gap-1' title='Read Chapters'>
               {row.original._count.reads} <BookOpenIcon className='size-3' />
+            </span>
+            <span className='flex items-center gap-1' title='Score'>
+              {calculateUserScore(
+                row.original._count.reads,
+                row.original._count.favoriteChapters,
+                row.original._count.characterViews,
+                row.original._count.favoriteCharacters,
+                row.original._count.comments
+              )}{' '}
+              <StarIcon className='size-3' />
             </span>
           </div>
         ),

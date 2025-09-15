@@ -34,7 +34,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { Ellipsis, Filter, Search, BookPlus, X } from 'lucide-react';
+import { Ellipsis, Filter, Search, BookPlus, X, MessageCircleIcon, HeartIcon, BookOpenIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -138,7 +138,7 @@ export function DashboardChaptersTable({ chapters }: { chapters: TChapter[] }) {
         id: 'title',
         header: ({ column }) => <DataGridColumnHeader title='Title' visibility={true} column={column} />,
         cell: ({ row }) => <div className='font-medium text-foreground'>{row.original.title}</div>,
-        size: 250,
+        size: 150,
         enableSorting: true,
         enableHiding: false,
         enableResizing: true,
@@ -189,6 +189,35 @@ export function DashboardChaptersTable({ chapters }: { chapters: TChapter[] }) {
           </div>
         ),
         size: 100,
+        enableSorting: true,
+        enableHiding: true,
+        enableResizing: true,
+      },
+      {
+        accessorFn: (row) => `${row._count.comments} c. ${row._count.reads} r. ${row._count.favorites} f.`,
+        id: 'stats',
+        header: ({ column }) => <DataGridColumnHeader title='Stats' visibility={true} column={column} />,
+        sortingFn: (rowA, rowB) => {
+          const totalA = rowA.original._count.comments + rowA.original._count.favorites + rowA.original._count.reads;
+          const totalB = rowB.original._count.comments + rowB.original._count.favorites + rowB.original._count.reads;
+          return totalA - totalB;
+        },
+        cell: ({ row }) => {
+          return (
+            <div className='font-medium text-foreground grid grid-cols-2 md:grid-cols-3 gap-1'>
+              <span className='flex items-center gap-1' title='Comments'>
+                {row.original._count.comments} <MessageCircleIcon className='size-3' />
+              </span>
+              <span className='flex items-center gap-1' title='Reads'>
+                {row.original._count.reads} <BookOpenIcon className='size-3' />
+              </span>
+              <span className='flex items-center gap-1' title='Favorites'>
+                {row.original._count.favorites} <HeartIcon className='size-3' />
+              </span>
+            </div>
+          );
+        },
+        size: 60,
         enableSorting: true,
         enableHiding: true,
         enableResizing: true,

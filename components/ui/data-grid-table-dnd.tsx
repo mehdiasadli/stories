@@ -52,17 +52,17 @@ function DataGridTableDndHeader<TData>({ header }: { header: Header<TData, unkno
 
   return (
     <DataGridTableHeadRowCell header={header} dndStyle={style} dndRef={setNodeRef}>
-      <div className="flex items-center justify-start gap-0.5">
+      <div className='flex items-center justify-start gap-0.5'>
         <Button
-          mode="icon"
-          size="sm"
-          variant="dim"
-          className="-ms-2 size-6"
+          mode='icon'
+          size='sm'
+          variant='dim'
+          className='-ms-2 size-6'
           {...attributes}
           {...listeners}
-          aria-label="Drag to reorder"
+          aria-label='Drag to reorder'
         >
-          <GripVertical className="opacity-50" aria-hidden="true" />
+          <GripVertical className='opacity-50' aria-hidden='true' />
         </Button>
         {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
         {props.tableLayout?.columnsResizable && column.getCanResize() && (
@@ -108,12 +108,10 @@ function DataGridTableDnd<TData>({ handleDragEnd }: { handleDragEnd: (event: Dra
       onDragEnd={handleDragEnd}
       sensors={sensors}
     >
-      <div className="relative">
+      <div className='relative'>
         <DataGridTableBase>
           <DataGridTableHead>
             {table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>, index) => {
-              console.log('table.getState().columnOrder:', table.getState().columnOrder);
-
               return (
                 <DataGridTableHeadRow headerGroup={headerGroup} key={index}>
                   <SortableContext items={table.getState().columnOrder} strategy={horizontalListSortingStrategy}>

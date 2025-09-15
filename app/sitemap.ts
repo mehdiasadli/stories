@@ -26,6 +26,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
     },
     {
+      url: `${url}/robots.txt`,
+      changeFrequency: 'never',
+      lastModified: new Date(),
+    },
+    {
+      url: `${url}/manifest.json`,
+      changeFrequency: 'never',
+      lastModified: new Date(),
+    },
+    {
       url: `${url}/about`,
       changeFrequency: 'yearly',
       lastModified: new Date(),

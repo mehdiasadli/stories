@@ -51,11 +51,8 @@ export default function Search({
         if (validatedQuery) {
           setSearch(validatedQuery);
         }
-      } catch (error) {
-        console.error(error);
-        // If validation fails, keep input empty but don't clear URL yet
-        // URL will be cleared on first user interaction
-      }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {}
     }
   }, [searchParams, searchParamKey, schema]);
 

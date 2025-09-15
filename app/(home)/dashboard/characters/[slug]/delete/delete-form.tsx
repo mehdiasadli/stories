@@ -51,7 +51,6 @@ export function DeleteCharacterForm({ character }: DeleteCharacterFormProps) {
         toast.error(result.message || 'Failed to delete character');
       }
     } catch (error) {
-      console.error('Error deleting character:', error);
       toast.error('An unexpected error occurred');
     } finally {
       setIsDeleting(false);

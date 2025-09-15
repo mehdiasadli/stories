@@ -38,8 +38,7 @@ export default function DashboardChapterEditContentForm({ chapter }: DashboardCh
 
       toast.success('Chapter content updated successfully');
     } catch (error) {
-      console.error('Error updating chapter content:', error);
-      // Handle error (show toast, etc.)
+      toast.error('An unexpected error occurred');
     } finally {
       setIsSubmitting(false);
     }

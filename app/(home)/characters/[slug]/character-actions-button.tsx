@@ -33,7 +33,7 @@ export function CharacterActionsButton({ characterSlug }: CharacterActionsButton
           setIsFavorited(data.isFavorited);
         }
       } catch (error) {
-        console.error('Error checking status:', error);
+        toast.error('Xəta baş verdi. Yenidən cəhd edin.');
       } finally {
         setIsCheckingStatus(false);
       }
@@ -62,7 +62,6 @@ export function CharacterActionsButton({ characterSlug }: CharacterActionsButton
         toast.error(data.error || 'personaj favoritlərə əlavə edilə bilmədi');
       }
     } catch (error) {
-      console.error('Error favoriting:', error);
       toast.error('Xəta baş verdi. Yenidən cəhd edin.');
     } finally {
       setIsLoading(false);

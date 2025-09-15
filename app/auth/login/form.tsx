@@ -51,7 +51,6 @@ export default function LoginForm() {
         router.refresh();
       }
     } catch (e) {
-      console.error(e);
       toast.error('xəta baş verdi. yenidən cəhd edin.');
     } finally {
       setIsLoading(false);

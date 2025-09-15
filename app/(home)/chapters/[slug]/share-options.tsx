@@ -44,7 +44,6 @@ export function ChapterShareOptions({ chapterTitle, chapterUrl }: ChapterShareOp
       await navigator.clipboard.writeText(url);
       toast.success('link kopyalandı!');
     } catch (error) {
-      console.error('Failed to copy link:', error);
       toast.error('link kopyalana bilmədi');
     }
   };

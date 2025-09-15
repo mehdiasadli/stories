@@ -33,8 +33,7 @@ export default function DashboardCharactersEditWikiForm({ character }: Dashboard
 
       toast.success('Character wiki updated successfully');
     } catch (error) {
-      console.error('Error updating character wiki:', error);
-      // Handle error (show toast, etc.)
+      toast.error('An unexpected error occurred');
     } finally {
       setIsSubmitting(false);
     }

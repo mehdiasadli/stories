@@ -96,7 +96,6 @@ export function CreateCharacterForm() {
         toast.error(result.error || 'Failed to create character');
       }
     } catch (error) {
-      console.error('Error creating character:', error);
       setError('An unexpected error occurred');
       toast.error('An unexpected error occurred');
     } finally {

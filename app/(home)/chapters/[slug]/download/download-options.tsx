@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface Chapter {
   id: string;
@@ -38,7 +39,7 @@ export function ChapterDownloadOptions({ chapter }: ChapterDownloadOptionsProps)
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error downloading text file:', error);
+      toast.error('Error downloading text file');
     } finally {
       setIsDownloading(null);
     }
@@ -73,7 +74,7 @@ export function ChapterDownloadOptions({ chapter }: ChapterDownloadOptionsProps)
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('PDF yüklənə bilmədi:', error);
+      toast.error('PDF yüklənə bilmədi');
     } finally {
       setIsDownloading(null);
     }
@@ -97,7 +98,7 @@ export function ChapterDownloadOptions({ chapter }: ChapterDownloadOptionsProps)
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('HTML yüklənə bilmədi:', error);
+      toast.error('HTML yüklənə bilmədi');
     } finally {
       setIsDownloading(null);
     }

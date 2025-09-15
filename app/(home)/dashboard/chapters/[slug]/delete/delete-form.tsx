@@ -46,7 +46,6 @@ export function DeleteChapterForm({ chapter }: DeleteChapterFormProps) {
         toast.error(result.message || 'Failed to delete chapter');
       }
     } catch (error) {
-      console.error('Error deleting chapter:', error);
       toast.error('An unexpected error occurred');
     } finally {
       setIsDeleting(false);

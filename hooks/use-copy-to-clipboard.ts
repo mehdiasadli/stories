@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { toast } from 'sonner';
 
 export function useCopyToClipboard({
   timeout = 2000,
@@ -28,7 +29,7 @@ export function useCopyToClipboard({
       setTimeout(() => {
         setCopied(false);
       }, timeout);
-    }, console.error);
+    }, toast.error);
   };
 
   return { copied, copy };

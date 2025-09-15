@@ -46,7 +46,6 @@ export function ChapterActionsButtons({ chapterSlug }: ChapterActionsButtonsProp
           setHasRead(favoriteData.hasRead);
         }
       } catch (error) {
-        console.error('Error checking status:', error);
       } finally {
         setIsCheckingStatus(false);
       }
@@ -76,7 +75,6 @@ export function ChapterActionsButtons({ chapterSlug }: ChapterActionsButtonsProp
         toast.error(data.error || 'bölüm oxundu bilmədi');
       }
     } catch (error) {
-      console.error('Error marking as read:', error);
       toast.error('xəta baş verdi. yenidən cəhd edin.');
     } finally {
       setIsLoading(false);
@@ -107,7 +105,6 @@ export function ChapterActionsButtons({ chapterSlug }: ChapterActionsButtonsProp
         }
       }
     } catch (error) {
-      console.error('Error favoriting:', error);
       toast.error('xəta baş verdi. yenidən cəhd edin.');
     } finally {
       setIsLoading(false);

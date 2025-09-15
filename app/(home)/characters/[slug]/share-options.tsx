@@ -44,7 +44,6 @@ export function CharacterShareOptions({ characterName, characterUrl }: Character
       await navigator.clipboard.writeText(url);
       toast.success('link kopyalandı!');
     } catch (error) {
-      console.error('Failed to copy link:', error);
       toast.error('link kopyalana bilmədi');
     }
   };

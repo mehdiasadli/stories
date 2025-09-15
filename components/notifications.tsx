@@ -20,7 +20,6 @@ export function Notifications() {
         const data = (await response.json()) as { success: boolean; data?: number };
         setNotificationsCount(data.data || 0);
       } catch (error) {
-        console.error('Error fetching notifications count:', error);
         toast.error('Error fetching notifications count');
         setNotificationsCount(0);
       } finally {

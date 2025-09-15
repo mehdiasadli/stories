@@ -65,7 +65,6 @@ export function EditChapterForm({ chapter }: EditChapterFormProps) {
         toast.error(result.error || 'Failed to update chapter');
       }
     } catch (error) {
-      console.error('Error updating chapter:', error);
       setError('An unexpected error occurred');
       toast.error('An unexpected error occurred');
     } finally {

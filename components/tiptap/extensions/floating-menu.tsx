@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils';
 import type { Editor } from '@tiptap/core';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useDebounce } from '@/lib/hooks';
+import { toast } from 'sonner';
 
 interface CommandItemType {
   title: string;
@@ -159,7 +160,7 @@ export function TipTapFloatingMenu({ editor }: { editor: Editor }) {
 
         commandFn(editor);
       } catch (error) {
-        console.error('Error executing command:', error);
+        toast.error('Error executing command');
       } finally {
         setIsOpen(false);
         setSearch('');

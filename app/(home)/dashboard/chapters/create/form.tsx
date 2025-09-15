@@ -25,7 +25,7 @@ export function CreateChapterForm() {
           setOrderInput(result.data.nextOrder.toString());
         }
       } catch (error) {
-        console.error('Error fetching chapter orders:', error);
+        toast.error('An unexpected error occurred');
       }
     };
 
@@ -69,7 +69,6 @@ export function CreateChapterForm() {
         toast.error(result.error || 'Failed to create chapter');
       }
     } catch (error) {
-      console.error('Error creating chapter:', error);
       setError('An unexpected error occurred');
       toast.error('An unexpected error occurred');
     } finally {

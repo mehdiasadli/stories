@@ -82,30 +82,60 @@ export default async function CharacterPage({ params }: CharacterPageProps) {
     notFound();
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: character.name,
+    image: `${baseUrl}/api/og/characters/${slug}`,
+    description: character.description || character.nameDescription || `${character.name} - mahmud əsərinin personajı.`,
+    url: `${baseUrl}/characters/${character.slug}`,
+    type: 'profile',
+    keywords: ['character', 'personaj', 'mahmud', character.name, character.description],
+    about: ['character', 'personaj', 'mahmud', character.name, character.description],
+    isPartOf: {
+      '@type': 'Book',
+      name: 'mahmud',
+      url: `${baseUrl}`,
+      author: {
+        '@type': 'Person',
+      },
+    },
+  };
+
   return (
-    <div className='min-h-screen bg-white'>
-      <div className='max-w-6xl mx-auto px-4 py-8'>
-        {/* Header */}
-        <CharacterHeader name={character.name} slug={slug} />
+    <>
+      <section>
+        <script
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
+        />
+      </section>
 
-        {/* Wikipedia-style Layout */}
-        <div className='flex flex-col lg:flex-row gap-8'>
-          {/* Main Content */}
-          <div className='flex-1'>
-            {/* Description Blockquote */}
-            <CharacterArticle character={character} />
+      <div className='min-h-screen bg-white'>
+        <div className='max-w-6xl mx-auto px-4 py-8'>
+          {/* Header */}
+          <CharacterHeader name={character.name} slug={slug} />
 
-            {/* Chapter Appearances */}
-            {character.chapters && character.chapters.length > 0 && <CharacterAppearances character={character} />}
+          {/* Wikipedia-style Layout */}
+          <div className='flex flex-col lg:flex-row gap-8'>
+            {/* Main Content */}
+            <div className='flex-1'>
+              {/* Description Blockquote */}
+              <CharacterArticle character={character} />
+
+              {/* Chapter Appearances */}
+              {character.chapters && character.chapters.length > 0 && <CharacterAppearances character={character} />}
+            </div>
+
+            {/* Wikipedia-style Info Box */}
+            <CharacterInfoBox character={character} />
           </div>
 
-          {/* Wikipedia-style Info Box */}
-          <CharacterInfoBox character={character} />
+          {/* Footer */}
+          <CharacterFooter character={character} authorId={authorId} />
         </div>
-
-        {/* Footer */}
-        <CharacterFooter character={character} authorId={authorId} />
       </div>
-    </div>
+    </>
   );
 }

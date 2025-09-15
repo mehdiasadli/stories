@@ -117,7 +117,6 @@ export function EditCharacterForm({ character }: EditCharacterFormProps) {
         toast.error(result.error || 'Failed to update character');
       }
     } catch (error) {
-      console.error('Error updating character:', error);
       setError('An unexpected error occurred');
       toast.error('An unexpected error occurred');
     } finally {

@@ -100,113 +100,155 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
   const nextChapter = allChapters.find((c) => c.order === currentOrder + 1) || null;
   const readingTime = calculateReadingTime(chapter.wordCount);
 
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Chapter',
+    name: chapter.title,
+    image: `${baseUrl}/api/og/chapters/${slug}`,
+    description: chapter.synopsis || `mahmud əsərinin #${chapter.order} bölümü.`,
+    text: chapter.content,
+    datePublished: chapter.publishedAt,
+    url: `${baseUrl}/chapters/${slug}`,
+    wordCount: chapter.wordCount,
+    position: chapter.order,
+    keywords: ['bölüm', 'bölüm oxu', 'mahmud', `bölüm ${chapter.order}`, chapter.title, chapter.synopsis].filter(
+      Boolean
+    ) as string[],
+    about: ['bölüm', 'bölüm oxu', 'mahmud', `bölüm ${chapter.order}`, chapter.title, chapter.synopsis].filter(
+      Boolean
+    ) as string[],
+    isPartOf: {
+      '@type': 'Book',
+      name: 'mahmud',
+      url: `${baseUrl}`,
+      author: {
+        '@type': 'Person',
+        name: chapter.author.name,
+        url: `${baseUrl}/users/${chapter.author.slug}`,
+      },
+    },
+  };
+
   return (
-    <div className='min-h-screen bg-white'>
-      <div className='max-w-4xl mx-auto px-4 py-8'>
-        {/* Header */}
-        <div className='text-center mb-16'>
-          <Link href={`/`} className='text-sm text-gray-500 hover:text-gray-700 transition-colors'>
-            ← bölümlər
-          </Link>
+    <>
+      <section>
+        <script
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
+        />
+      </section>
 
-          <h1 className='text-6xl font-serif text-gray-900 mt-8 mb-2'>{chapter.title}</h1>
-
-          <p className='text-sm text-gray-500'>
-            bölüm #{chapter.order} • {readingTime} dəq. oxuma
-          </p>
-        </div>
-
-        {/* Content */}
-        <div className='prose prose-lg max-w-none'>
-          <div
-            className='chapter-content'
-            dangerouslySetInnerHTML={{ __html: chapter.content || '<p>kontent yoxdur.</p>' }}
-          />
-        </div>
-
-        {/* Chapter Actions Buttons */}
-        <ChapterActionsButtons chapterSlug={slug} />
-
-        {/* Footer */}
-        <div className='mt-16 pt-8 border-t border-gray-200 text-center space-y-6'>
-          {/* Quick Actions */}
-          <div className='flex items-center justify-center gap-6 text-sm'>
-            <Link
-              href={`/chapters/${slug}/discussion`}
-              className='text-gray-600 hover:text-gray-900 transition-colors border-b border-gray-200 hover:border-gray-400 pb-1'
-            >
-              {chapter._count.comments} şərh
+      <div className='min-h-screen bg-white'>
+        <div className='max-w-4xl mx-auto px-4 py-8'>
+          {/* Header */}
+          <div className='text-center mb-16'>
+            <Link href={`/`} className='text-sm text-gray-500 hover:text-gray-700 transition-colors'>
+              ← bölümlər
             </Link>
 
-            <Link
-              href={`/chapters/${slug}/download`}
-              className='text-gray-600 hover:text-gray-900 transition-colors border-b border-gray-200 hover:border-gray-400 pb-1'
-            >
-              yüklə
-            </Link>
+            <h1 className='text-6xl font-serif text-gray-900 mt-8 mb-2'>{chapter.title}</h1>
 
-            <ChapterActions chapterSlug={slug} authorId={chapter.authorId} />
-
-            {chapter.status === 'PUBLISHED' && (
-              <ChapterShareOptions
-                chapterTitle={chapter.title}
-                chapterUrl={`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/chapters/${slug}`}
-              />
-            )}
+            <p className='text-sm text-gray-500'>
+              bölüm #{chapter.order} • {readingTime} dəq. oxuma
+            </p>
           </div>
 
-          {/* Chapter Navigation */}
-          <div className='pt-4 border-t border-gray-200'>
-            <div className='flex items-center justify-center gap-8'>
-              {previousChapter ? (
-                <Link
-                  href={`/chapters/${previousChapter.slug}`}
-                  className='text-sm text-gray-600 hover:text-gray-900 transition-colors'
-                >
-                  ← {previousChapter.title}
-                </Link>
-              ) : (
-                <span className='text-sm text-gray-400'>← əvvəlki</span>
-              )}
-
-              {nextChapter ? (
-                <Link
-                  href={`/chapters/${nextChapter.slug}`}
-                  className='text-sm text-gray-600 hover:text-gray-900 transition-colors'
-                >
-                  {nextChapter.title} →
-                </Link>
-              ) : (
-                <span className='text-sm text-gray-400'>növbəti →</span>
-              )}
-            </div>
+          {/* Content */}
+          <div className='prose prose-lg max-w-none'>
+            <div
+              className='chapter-content'
+              dangerouslySetInnerHTML={{ __html: chapter.content || '<p>kontent yoxdur.</p>' }}
+            />
           </div>
 
-          {/* Metadata */}
-          <div className='pt-4 border-t border-gray-200 text-xs text-gray-500 space-y-1'>
-            <div className='flex items-center gap-2 justify-center'>
-              <p>{chapter.wordCount} söz</p>
-              <p>•</p>
-              <Link href={`/chapters/${slug}/reads`} className='hover:text-gray-900 hover:underline transition-colors'>
-                <p>{chapter._count.reads} oxuma</p>
-              </Link>
-              <p>•</p>
+          {/* Chapter Actions Buttons */}
+          <ChapterActionsButtons chapterSlug={slug} />
+
+          {/* Footer */}
+          <div className='mt-16 pt-8 border-t border-gray-200 text-center space-y-6'>
+            {/* Quick Actions */}
+            <div className='flex items-center justify-center gap-6 text-sm'>
               <Link
-                href={`/chapters/${slug}/favorites`}
-                className='hover:text-gray-900 hover:underline transition-colors'
+                href={`/chapters/${slug}/discussion`}
+                className='text-gray-600 hover:text-gray-900 transition-colors border-b border-gray-200 hover:border-gray-400 pb-1'
               >
-                <p>{chapter._count.favorites} favorit</p>
+                {chapter._count.comments} şərh
               </Link>
-            </div>
-            <div>
-              <Link href={`/users/${chapter.author.slug}`} className='hover:text-gray-700 transition-colors'>
-                {chapter.author.name}
+
+              <Link
+                href={`/chapters/${slug}/download`}
+                className='text-gray-600 hover:text-gray-900 transition-colors border-b border-gray-200 hover:border-gray-400 pb-1'
+              >
+                yüklə
               </Link>
+
+              <ChapterActions chapterSlug={slug} authorId={chapter.authorId} />
+
+              {chapter.status === 'PUBLISHED' && (
+                <ChapterShareOptions
+                  chapterTitle={chapter.title}
+                  chapterUrl={`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/chapters/${slug}`}
+                />
+              )}
             </div>
-            {chapter.publishedAt && <div>{formatDistanceToNow(new Date(chapter.publishedAt))} əvvəl yayımlandı</div>}
+
+            {/* Chapter Navigation */}
+            <div className='pt-4 border-t border-gray-200'>
+              <div className='flex items-center justify-center gap-8'>
+                {previousChapter ? (
+                  <Link
+                    href={`/chapters/${previousChapter.slug}`}
+                    className='text-sm text-gray-600 hover:text-gray-900 transition-colors'
+                  >
+                    ← {previousChapter.title}
+                  </Link>
+                ) : (
+                  <span className='text-sm text-gray-400'>← əvvəlki</span>
+                )}
+
+                {nextChapter ? (
+                  <Link
+                    href={`/chapters/${nextChapter.slug}`}
+                    className='text-sm text-gray-600 hover:text-gray-900 transition-colors'
+                  >
+                    {nextChapter.title} →
+                  </Link>
+                ) : (
+                  <span className='text-sm text-gray-400'>növbəti →</span>
+                )}
+              </div>
+            </div>
+
+            {/* Metadata */}
+            <div className='pt-4 border-t border-gray-200 text-xs text-gray-500 space-y-1'>
+              <div className='flex items-center gap-2 justify-center'>
+                <p>{chapter.wordCount} söz</p>
+                <p>•</p>
+                <Link
+                  href={`/chapters/${slug}/reads`}
+                  className='hover:text-gray-900 hover:underline transition-colors'
+                >
+                  <p>{chapter._count.reads} oxuma</p>
+                </Link>
+                <p>•</p>
+                <Link
+                  href={`/chapters/${slug}/favorites`}
+                  className='hover:text-gray-900 hover:underline transition-colors'
+                >
+                  <p>{chapter._count.favorites} favorit</p>
+                </Link>
+              </div>
+              <div>
+                <Link href={`/users/${chapter.author.slug}`} className='hover:text-gray-700 transition-colors'>
+                  {chapter.author.name}
+                </Link>
+              </div>
+              {chapter.publishedAt && <div>{formatDistanceToNow(new Date(chapter.publishedAt))} əvvəl yayımlandı</div>}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

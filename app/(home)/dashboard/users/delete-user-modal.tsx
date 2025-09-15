@@ -30,7 +30,6 @@ export function DeleteUserModal({ isOpen, onClose, slug }: { isOpen: boolean; on
         toast.error('Failed to delete user');
       }
     } catch (error) {
-      console.error('Error deleting user:', error);
       toast.error('Failed to delete user');
     } finally {
       setIsDeleting(false);

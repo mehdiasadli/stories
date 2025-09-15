@@ -73,7 +73,6 @@ export function ChapterCharactersForm({ chapter }: ChapterCharactersFormProps) {
           toast.error('Failed to load characters');
         }
       } catch (error) {
-        console.error('Error loading characters:', error);
         toast.error('An unexpected error occurred');
       } finally {
         setIsLoading(false);
@@ -127,7 +126,6 @@ export function ChapterCharactersForm({ chapter }: ChapterCharactersFormProps) {
         toast.error(result.message || 'Failed to add character');
       }
     } catch (error) {
-      console.error('Error adding character:', error);
       toast.error('An unexpected error occurred');
     } finally {
       setIsSubmitting(false);
@@ -165,7 +163,6 @@ export function ChapterCharactersForm({ chapter }: ChapterCharactersFormProps) {
         toast.error(result.message || 'Failed to update character');
       }
     } catch (error) {
-      console.error('Error updating character:', error);
       toast.error('An unexpected error occurred');
     } finally {
       setIsSubmitting(false);
@@ -192,7 +189,6 @@ export function ChapterCharactersForm({ chapter }: ChapterCharactersFormProps) {
         toast.error(result.message || 'Failed to remove character');
       }
     } catch (error) {
-      console.error('Error removing character:', error);
       toast.error('An unexpected error occurred');
     }
   };

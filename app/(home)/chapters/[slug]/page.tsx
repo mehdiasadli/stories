@@ -48,6 +48,7 @@ export async function generateMetadata({ params }: ChapterPageProps): Promise<Me
       description: synopsis,
       card: 'summary_large_image',
       images: [`${baseUrl}/api/og/chapters/${slug}`],
+      site: '@mahmud_novel',
     },
     pinterest: {
       richPin: true,
@@ -56,6 +57,8 @@ export async function generateMetadata({ params }: ChapterPageProps): Promise<Me
       title: openGraphTitle,
       type: 'website',
       description: synopsis,
+      siteName: 'mahmud',
+      locale: 'az',
       url: `${baseUrl}/chapters/${slug}`,
       images: [
         {

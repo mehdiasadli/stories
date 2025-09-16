@@ -35,7 +35,6 @@ export function useMediaQuery(query: string): boolean {
 
 type IsOptional<T> = T extends z.ZodOptional<any> ? true : false;
 type InferOutput<T> = T extends z.ZodSchema<infer U> ? U : never;
-type InferInput<T> = T extends z.ZodSchema<any, any, infer U> ? U : never;
 
 interface UseQueryParamPropsRequired<Output> {
   schema: z.ZodSchema<Output, z.ZodTypeDef, string>;

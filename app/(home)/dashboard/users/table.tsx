@@ -125,8 +125,6 @@ function ActionsCell({ row }: { row: IRow }) {
 }
 
 export function DashboardUsersTable({ users }: { users: TUser[] }) {
-  console.log('users', users);
-
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,

@@ -43,46 +43,13 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       return NextResponse.json({ error: 'Character not found' }, { status: 404 });
     }
 
-    // If authenticated user: dedupe by user within 1 hour
-    if (userId) {
-      const lastView = await prisma.characterView.findFirst({
-        where: {
-          userId,
-          character: { published: true },
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-      });
-
-      if (lastView && lastView.createdAt > new Date(Date.now() - 1 * 60 * 60 * 1000)) {
-        // do nothing and return 200
-        return NextResponse.json({ success: true, message: 'Character already viewed in the last hour' });
-      }
-    }
-
-    // For anonymous users: try to dedupe if fingerprint exists
-    // Fingerprint is optional; if not present, we count the view
-    const fingerprintHeader = request.headers.get('x-fingerprint') || generateFingerprint(request);
-    if (!userId && fingerprintHeader) {
-      const lastAnonView = await prisma.characterView.findFirst({
-        where: {
-          characterId: character.id,
-          fingerprint: fingerprintHeader,
-        },
-        orderBy: { createdAt: 'desc' },
-      });
-
-      if (lastAnonView && lastAnonView.createdAt > new Date(Date.now() - 1 * 60 * 60 * 1000)) {
-        return NextResponse.json({ success: true, message: 'Anonymous character view throttled by fingerprint' });
-      }
-    }
+    const fingerprint = generateFingerprint(request);
 
     await prisma.characterView.create({
       data: {
         characterId: character.id,
         userId: userId || null,
-        fingerprint: !userId ? request.headers.get('x-fingerprint') || null : null,
+        fingerprint: !userId ? fingerprint : null,
       },
     });
 

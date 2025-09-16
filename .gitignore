@@ -45,3 +45,5 @@ next-env.d.ts
 /ignore
 seed.ts
 .txt
+meta.ts
+.cursorignore

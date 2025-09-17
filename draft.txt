@@ -1,0 +1,60 @@
+====
+ADDING AS PARENT:
+
+Action: I am on character Joe. I am adding character Mike as his parent.
+
+Logical Checks:
+- Check if Joe has already 2 parents. Maximum 2 parents are allowed.
+- Check if Joe and Mike has any other relationship. Setting Parent must be only relationship between them.
+
+Enchancement Selections:
+1. IF Joe has siblings, GET selection for siblings if Mike is their parent as well [Apply Logical Checks on them as well if selected]
+2. IF Joe has a parent, GET selection for that parent if Mike is his/her husband [Apply Logical Checks (for Spouse) on his/her as well if selected]
+3. IF Mike has spouse, GET selection for that spouse if Joe is his/her son [Apply Logical Checks (for Child) on his/her as well if selected]
+4. IF Mike has children, GET selection for childrens if Joe is their sibling [Apply Logical Checks (for Sibling) on his/her as well if selected]
+
+CONSIDER for enchancement selectionf 2 and 3:
+Either Joe's parent must be set as Mike's spouse (2), or Mike's spouse must be set as Joe's parent (3), not both together
+
+
+DO:
+- Add Mike as Jon's PARENT, add Jon as Mike's CHILD
+- IF ANY SELECTION OCCURED ON Enchancement 1 > Add Mike as those siblings' PARENT, add those siblings as Mike's CHILD[]
+- IF ANY SELECTION OCCURED ON Enchancement 2 > Add Mike as Joe's parent SPOUSE, and that Joe's parent as Mike's SPOUSE
+- IF ANY SELECTION OCCURED ON Enchancement 3 > Add Joe as Mike's spouse's child, and that Mike's spuse as Joe's PARENT
+- IF ANY SELECTION OCCURED ON Enchancement 4 > Add Joe as Mike's childrens siblings, and those siblings as Joe's siblings
+
+====
+ADDING AS SPOUSE:
+
+Action: I am on character Joe. I am adding character Jane as his spouse.
+
+Enchancement Selections:
+1. IF Joe has children, GET selection for children if Jane is their mother as well [Apply Logical Checks (for PARENT) on them as well if selected]
+2. IF Jane has children, GET selection for children if Joe is their father as well [Apply Logical Checks (for PARENT) on them as well if selected]
+
+DO:
+- Add Joe as Jane's SPOUSE, add Jane as JOE's spouse
+- IF ANY SELECTION OCCURED ON Enchancement 1 > Add Jane as mother of Joe's children, and Joe's children as Jane's CHILD[]
+- IF ANY SELECTION OCCURED ON Enchancement 2 > Add Joe as father of Jane's children, and Jane's children as Joe's CHILD[]
+
+====
+ADDING AS SIBLING:
+
+Action: I am on character Joe. I am adding character Mike as his sibling.
+
+Logical Checks:
+- Check if Joe and Mike has either PARENT or CHILD relationship. If so, SIBLING cannot be set
+
+Enchancement Selections:
+1. IF Joe has siblings, GET selection for siblings if Mike is their sibling as well [Apply Logical Checks on them as well if selected]
+2. IF Mike has siblings, GET selection for siblings if Joe is their sibling as well [Apply Logical Checks on them as well if selected]
+3. IF Joe has parents, GET selection for that parents if they are parents of Mike as well [Apply Logical Checks (for PARENT) on his/her as well if selected]
+4. IF Mike has parents, GET selection for that parents if they are parents of Joe as well [Apply Logical Checks (for PARENT) on his/her as well if selected]
+
+DO:
+- Add Mike as Joe's SIBLING, add JOE as Mike's SIBLING
+- IF ANY SELECTION OCCURED ON Enchancement 1 > set Joe's siblings to Mike as well, and Mike to Joe's siblings
+- IF ANY SELECTION OCCURED ON Enchancement 2 > set Mike's siblings to Joe as well, and Joe to Mike's siblings
+- IF ANY SELECTION OCCURED ON Enchancement 3 > set Joe's parents to Mike as well, and Mike to Joe's parents' CHILD
+- IF ANY SELECTION OCCURED ON Enchancement 1 > set Mike's siblings to Joe as well, and Joe to Mike's parents' CHILD

@@ -11,7 +11,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { name: true },
+      select: { name: true, id: true },
     });
 
     const authorId = await getAuthorId();
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       },
     });
 
-    if (user) {
+    if (user && user.id !== authorId) {
       await createNotification({
         userId: authorId,
         title: `${user.name} ${character.name} personajına baxdı`,

@@ -47,3 +47,4 @@ seed.ts
 .txt
 meta.ts
 .cursorignore
+/lib/seed.ts

@@ -11,6 +11,7 @@ import { ItalicToolbar } from './italic';
 import { UnderlineToolbar } from './underline';
 import { StrikeThroughToolbar } from './strikethrough';
 import { LinkToolbar } from './link';
+import { EnhancedLinkToolbar } from './enhanced-link';
 import { HorizontalRuleToolbar } from './horizontal-rule';
 // import { BulletListToolbar } from './bullet-list';
 // import { HardBreakToolbar } from './hard-break';
@@ -19,9 +20,10 @@ import AlignmentToolbar from './alignment';
 interface EditorToolbarProps {
   editor: Editor;
   linkBase?: string;
+  enableCharacterSearch?: boolean;
 }
 
-export default function EditorToolbar({ editor, linkBase }: EditorToolbarProps) {
+export default function EditorToolbar({ editor, linkBase, enableCharacterSearch }: EditorToolbarProps) {
   return (
     <div className='sticky top-0 z-20 w-full border-b bg-background hidden sm:block'>
       <ToolbarProvider editor={editor}>
@@ -44,7 +46,11 @@ export default function EditorToolbar({ editor, linkBase }: EditorToolbarProps) 
                 <ItalicToolbar />
                 <UnderlineToolbar />
                 <StrikeThroughToolbar />
-                <LinkToolbar linkBase={linkBase} />
+                {enableCharacterSearch ? (
+                  <EnhancedLinkToolbar enableCharacterSearch={enableCharacterSearch} />
+                ) : (
+                  <LinkToolbar linkBase={linkBase} />
+                )}
                 <Separator orientation='vertical' className='mx-1 h-7' />
 
                 {/* Lists & Structure Group */}

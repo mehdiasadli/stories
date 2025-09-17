@@ -7,6 +7,7 @@ import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 import { deleteImage, extractPublicIdFromUrl } from '@/lib/cloudinary';
 import { createMultipleNotifications } from '@/lib/fetchers';
+import { updateCharacterLinksInWikis } from '@/lib/character-link-updater';
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -50,6 +51,17 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         aliases: data.aliases || [],
       },
     });
+
+    // Update character links in all wikis if slug changed
+    if (newSlug !== slug) {
+      try {
+        await updateCharacterLinksInWikis(slug, newSlug);
+        console.log(`Successfully updated character links from ${slug} to ${newSlug}`);
+      } catch (error) {
+        console.error('Failed to update character links:', error);
+        // Don't fail the entire request if link updates fail
+      }
+    }
 
     if (data.published && !existingCharacter.published) {
       const users = await prisma.user.findMany({

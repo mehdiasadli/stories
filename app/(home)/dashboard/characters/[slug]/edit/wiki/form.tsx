@@ -70,7 +70,7 @@ export default function DashboardCharactersEditWikiForm({ character }: Dashboard
           onUpdate={({ editor }) => {
             setContent(editor.getHTML());
           }}
-          linkBase={`${process.env.NEXT_PUBLIC_APP_URL}/characters/`}
+          enableCharacterSearch={true}
         />
       </div>
     </div>

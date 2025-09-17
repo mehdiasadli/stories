@@ -64,12 +64,18 @@ const extensions = [
 ];
 
 interface EditorProps {
-  onUpdate: (props: EditorEvents['update']) => void;
+  onUpdate?: (props: EditorEvents['update']) => void;
   content?: string;
   linkBase?: string;
+  enableCharacterSearch?: boolean;
 }
 
-export default function Editor({ onUpdate, linkBase, content = '<p>Start writing...</p>' }: EditorProps) {
+export default function Editor({
+  onUpdate,
+  linkBase,
+  enableCharacterSearch,
+  content = '<p>Start writing...</p>',
+}: EditorProps) {
   const editor = useEditor({
     immediatelyRender: false,
     extensions: extensions as Extension[],
@@ -87,7 +93,7 @@ export default function Editor({ onUpdate, linkBase, content = '<p>Start writing
 
   return (
     <div className='relative max-h-[calc(100dvh-6rem)]  w-full overflow-hidden overflow-y-scroll border bg-card pb-[60px] sm:pb-0'>
-      <EditorToolbar editor={editor} linkBase={linkBase} />
+      <EditorToolbar editor={editor} linkBase={linkBase} enableCharacterSearch={enableCharacterSearch} />
       <FloatingToolbar editor={editor} />
       <TipTapFloatingMenu editor={editor} />
       <EditorContent editor={editor} className='min-h-[600px] w-full min-w-full cursor-text sm:p-6' />
